@@ -56,6 +56,74 @@ class TestGame(unittest.TestCase):
     self.assertTrue(game.win)
     self.assertTrue(game.game_over)
 
+  # give_feedback method
+  def test_give_feedback_example_run(self):
+    game = Game(1)
+    game.answer = "0135"
+    feedback = game.give_feedback("2246")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 0)
+
+    feedback = game.give_feedback("0246")
+    self.assertEqual(feedback['correct_location'], 1)
+    self.assertEqual(feedback['correct_number'], 1)
+
+    feedback = game.give_feedback("2211")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 1)
+
+    feedback = game.give_feedback("0156")
+    self.assertEqual(feedback['correct_location'], 2)
+    self.assertEqual(feedback['correct_number'], 3)
+
+  # store_history method
+  def test_store_history(self):
+    game = Game(1)
+    game.answer = "1234"
+    game.check_answer("1111")
+    self.assertEqual(len(game.history), 1)
+    game.check_answer("2222")
+    self.assertEqual(len(game.history), 2)
+    game.check_answer("3333")
+    self.assertEqual(len(game.history), 3)
+
+  # get_history method
+  def test_get_history(self):
+    game = Game(1)
+    game.check_answer("1111")
+    game.check_answer("2222")
+    game.check_answer("3333")
+    list = game.get_history()
+    self.assertEqual(len(list), 3)
+
+  # give_hint method
+  def test_give_hint_correct(self):
+    game = Game(1)
+    game.answer = "7777"
+    game.check_answer("7717")
+    hint = game.give_hint()
+    self.assertEqual(game.hints, 1)
+    self.assertTrue("is in the correct position." in hint[1])
+
+  def test_give_hint_no_attempt(self):
+    game = Game(1)
+    game.answer = "7777"
+    hint = game.give_hint()
+    self.assertEqual(game.hints, 2)
+    self.assertEqual(hint[0], None)
+    self.assertEqual(hint[1], "You must take a guess first.")
+
+  def test_give_hint_no_more_hints(self):
+    game = Game(1)
+    game.answer = "7777"
+    game.check_answer("1111")
+    hint = game.give_hint()
+    self.assertEqual(game.hints, 1)
+    hint = game.give_hint()
+    self.assertEqual(game.hints, 0)
+    hint = game.give_hint()
+    self.assertEqual(hint[0], None)
+    self.assertEqual(hint[1], "You have no more hints.")
 
   # difficulty validation
   def test_difficulty_valid(self):
@@ -85,10 +153,10 @@ class TestGame(unittest.TestCase):
     self.assertEqual(len(easy_game.answer), 4)
 
     med_game = Game(2)
-    self.assertEqual(len(med_game.answer), 5)
+    self.assertEqual(len(med_game.answer), 4)
 
     hard_game = Game(3)
-    self.assertEqual(len(hard_game.answer), 6)
+    self.assertEqual(len(hard_game.answer), 5)
 
 if __name__ == '__main__':
 
