@@ -57,6 +57,76 @@ class TestGame(unittest.TestCase):
     self.assertTrue(game.game_over)
 
   # give_feedback method
+  def test_give_feedback_exact_matches(self):
+    game = Game(1)
+    game.answer = "1234"
+    feedback = game.give_feedback("1234")
+    self.assertEqual(feedback['correct_location'], 4)
+    self.assertEqual(feedback['correct_number'], 4)
+
+  def test_give_feedback_zero_matches(self):
+    game = Game(1)
+    game.answer = "1234"
+    feedback = game.give_feedback("5555")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 0)
+
+  def test_give_feedback_only_correct_numbers(self):
+    game = Game(1)
+    game.answer = "1234"
+    feedback = game.give_feedback("4321")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 4)
+
+  def test_give_feedback_some_correct_numbers(self):
+    game = Game(1)
+    game.answer = "1234"
+    feedback = game.give_feedback("1536")
+    self.assertEqual(feedback['correct_location'], 2)
+    self.assertEqual(feedback['correct_number'], 2)
+
+  def test_give_feedback_repeated_numbers_one(self):
+    game = Game(1)
+    game.answer = "1234"
+    feedback = game.give_feedback("2222")
+    self.assertEqual(feedback['correct_location'], 1)
+    self.assertEqual(feedback['correct_number'], 1)
+
+  def test_give_feedback_repeated_numbers_two(self):
+    game = Game(1)
+    game.answer = "2234"
+    feedback = game.give_feedback("2222")
+    self.assertEqual(feedback['correct_location'], 2)
+    self.assertEqual(feedback['correct_number'], 2)
+
+  def test_give_feedback_repeated_numbers_three(self):
+    game = Game(1)
+    game.answer = "1222"
+    feedback = game.give_feedback("2222")
+    self.assertEqual(feedback['correct_location'], 3)
+    self.assertEqual(feedback['correct_number'], 3)
+
+  def test_give_feedback_repeated_numbers_four(self):
+    game = Game(1)
+    game.answer = "2222"
+    feedback = game.give_feedback("2222")
+    self.assertEqual(feedback['correct_location'], 4)
+    self.assertEqual(feedback['correct_number'], 4)
+
+  def test_give_feedback_repeated_mixed(self):
+    game = Game(1)
+    game.answer = "2211"
+    feedback = game.give_feedback("1122")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 4)
+
+  def test_give_feedback_repeated_outers(self):
+    game = Game(1)
+    game.answer = "2112"
+    feedback = game.give_feedback("1221")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 4)
+
   def test_give_feedback_example_run(self):
     game = Game(1)
     game.answer = "0135"
@@ -99,8 +169,8 @@ class TestGame(unittest.TestCase):
   # give_hint method
   def test_give_hint_correct(self):
     game = Game(1)
-    game.answer = "7777"
-    game.check_answer("7717")
+    game.answer = "1211"
+    game.history.append("1211")
     hint = game.give_hint()
     self.assertEqual(game.hints, 1)
     self.assertTrue("is in the correct position." in hint[1])
@@ -124,6 +194,19 @@ class TestGame(unittest.TestCase):
     hint = game.give_hint()
     self.assertEqual(hint[0], None)
     self.assertEqual(hint[1], "You have no more hints.")
+
+  # validate_user_answer method
+  def test_validate_user_answer(self):
+    game = Game(1)
+    with self.assertRaisesRegex(ValueError, "Input must be 4 numbers."):
+      game.validate_user_answer("11111")
+    with self.assertRaisesRegex(ValueError, "All inputs must be digits between 0 and 7."):
+      game.validate_user_answer("9991")
+    with self.assertRaisesRegex(ValueError, "Input can only contain numbers."):
+      game.validate_user_answer("KEVN")
+    game3 = Game(3)
+    with self.assertRaisesRegex(ValueError, "Input must be 5 numbers."):
+      game3.validate_user_answer("111211")
 
   # difficulty validation
   def test_difficulty_valid(self):
