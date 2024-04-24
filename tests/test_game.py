@@ -2,6 +2,60 @@ import unittest
 from models.game import Game
 
 class TestGame(unittest.TestCase):
+  # check_answer method
+  def test_check_answer(self):
+    game = Game(1)
+    game.answer = "1234"
+    user_answer = "1234"
+    result = game.check_answer(user_answer)
+    self.assertTrue(game.win)
+    self.assertTrue(result)
+
+  def test_check_answer_incorrect(self):
+    game = Game(1)
+    game.answer = "1234"
+    user_answer = "7777"
+    result = game.check_answer(user_answer)
+    self.assertFalse(result)
+
+  # decrement_attempts method
+  def test_decrement(self):
+    game = Game(1)
+    self.assertTrue(game.attempts, 10)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 9)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 8)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 7)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 6)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 5)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 4)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 3)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 2)
+    game.decrement_attempt()
+    self.assertTrue(game.attempts, 1)
+    game.decrement_attempt()
+    self.assertFalse(game.win)
+    self.assertTrue(game.game_over)
+
+  # game_over method
+  def test_game_over_win(self):
+    game = Game(1)
+    game.answer = "1234"
+    user_choice = "7777"
+    game.check_answer(user_choice)
+    game.decrement_attempt()
+    user_choice = "1234"
+    game.check_answer(user_choice)
+    self.assertTrue(game.win)
+    self.assertTrue(game.game_over)
+
 
   # difficulty validation
   def test_difficulty_valid(self):
@@ -37,4 +91,5 @@ class TestGame(unittest.TestCase):
     self.assertEqual(len(hard_game.answer), 6)
 
 if __name__ == '__main__':
+
   unittest.main()

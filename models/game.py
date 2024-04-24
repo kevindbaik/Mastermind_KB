@@ -7,9 +7,23 @@ class Game:
     self.attempts = 10
     self.history = []
     self.hints = 2
+    self.win = False
+    self.game_over = False
 
   # ------- methods ----------
+  def check_answer(self, user_answer):
+    if user_answer == self.answer:
+      self.win = True
+      self.game_over = True
+      return True
+    else:
+      return False
 
+  def decrement_attempt(self):
+    self.attempts -= 1
+    if self.attempts == 0:
+      self.game_over = True
+    return self.attempts
 
   # --------- getters/setters ---------
   @property
@@ -26,7 +40,9 @@ class Game:
 
   # ------- private methods ----------
   def _generate_answer(self):
+    # helper method for setting difficulty of game
     range = self._generate_max_range()
+
     url = f"https://www.random.org/integers/?num={range}&min=0&max=7&col=1&base=10&format=plain&rnd=new"
     response = requests.get(url)
 
