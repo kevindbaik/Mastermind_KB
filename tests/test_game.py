@@ -57,25 +57,6 @@ class TestGame(unittest.TestCase):
     self.assertTrue(game.game_over)
 
   # give_feedback method
-  def test_give_feedback_example_run(self):
-    game = Game(1)
-    game.answer = "0135"
-    feedback = game.give_feedback("2246")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 0)
-
-    feedback = game.give_feedback("0246")
-    self.assertEqual(feedback['correct_location'], 1)
-    self.assertEqual(feedback['correct_number'], 1)
-
-    feedback = game.give_feedback("2211")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 1)
-
-    feedback = game.give_feedback("0156")
-    self.assertEqual(feedback['correct_location'], 2)
-    self.assertEqual(feedback['correct_number'], 3)
-
   def test_give_feedback_exact_matches(self):
     game = Game(1)
     game.answer = "1234"
@@ -145,6 +126,25 @@ class TestGame(unittest.TestCase):
     feedback = game.give_feedback("1221")
     self.assertEqual(feedback['correct_location'], 0)
     self.assertEqual(feedback['correct_number'], 4)
+
+  def test_give_feedback_example_run(self):
+    game = Game(1)
+    game.answer = "0135"
+    feedback = game.give_feedback("2246")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 0)
+
+    feedback = game.give_feedback("0246")
+    self.assertEqual(feedback['correct_location'], 1)
+    self.assertEqual(feedback['correct_number'], 1)
+
+    feedback = game.give_feedback("2211")
+    self.assertEqual(feedback['correct_location'], 0)
+    self.assertEqual(feedback['correct_number'], 1)
+
+    feedback = game.give_feedback("0156")
+    self.assertEqual(feedback['correct_location'], 2)
+    self.assertEqual(feedback['correct_number'], 3)
 
   # store_history method
   def test_store_history(self):
