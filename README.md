@@ -1,4 +1,12 @@
-# Mastermind_KB
+# Welcome to Mastermind! 
 
-## 📚 My Journal 📚 
-**_Click [here](/readme/journal.md) to read my daily journal, where I documented my daily progress in a mock standup way! _**
+## 📚 Table of Contents 📚
+  - WIP
+
+## 🖥️ Setup and Run Locally 🖥️
+  - WIP
+  - 
+## 🏁 Features 🏁
+
+## ✏️ My Journal ✏️
+**_Click [here](/readme/journal.md) to read my journal where I documented my daily progress in a mock standup way!_**
