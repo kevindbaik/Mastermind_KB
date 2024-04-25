@@ -63,13 +63,16 @@ class Console:
   def display_game(self, game):
     print("=" * 50)
     print(f"difficulty: {game.difficulty}")
-    print("")
-    print(f"attempts: {game.attempts}")
-    print("")
     print(f"hints available (type hint): {game.hints}")
+    print(f"attempts remaining: {game.attempts}")
     print("")
     print("previous attempts:")
-    for guess in game.get_history():
+    history = game.get_history()
+    for i in range(len(history)):
+        guess = history[i]
         feedback = game.give_feedback(guess)
-        print(f"guess: {guess} - correct numbers: {feedback['correct_number']}, correct locations: {feedback['correct_location']}")
+        if(feedback['correct_number'] == 0 and feedback['correct_location'] == 0):
+          print(f"guess #{i+1}: {guess} - all of your numbers are incorrect!")
+        else:
+          print(f"guess #{i+1}: {guess} - correct numbers: {feedback['correct_number']}, correct locations: {feedback['correct_location']}")
     print("=" * 50)

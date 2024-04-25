@@ -27,9 +27,9 @@ class Controller:
       case 3: # exit game
         pass
 
-  # ------- helper methods --------
+  # ------- helpers --------
   def handle_case_one(self):
-    self.console.display_header("challenge accepted!", "my names link!", "what's your name?")
+    self.console.display_header("challenge accepted!", "my names link... what's your name?")
     while True:
         try:
             name = self.console.read_string("My Name: ")
@@ -37,13 +37,11 @@ class Controller:
             break
         except ValueError as err:
             print(err)
-
     self.console.display_difficulty(name)
-
     while True:
         try:
-            difficulty = self.console.read_int("I choose: ", 3)
-            self.console.display_header("ha ok!", "give me one second...", "creating my secret code...")
+            difficulty = self.console.read_int("My Choice: ", 3)
+            self.console.display_header("ok...give me one second...", "creating my secret code...")
             self.game = Game(difficulty)
             break
         except (ValueError, ConnectionError) as err:
@@ -51,26 +49,34 @@ class Controller:
             if isinstance(err, ConnectionError):
                 return
     ## game starts
-    self.console.display_header("..and there we go! goodluck!")
+    self.console.display_game(self.game)
     while not self.game.game_over:
-      self.console.display_game(self.game)
-      user_answer = None
+      if self.game.attempts == 0:
+        self.game.end_game_lose()
+        break
+    # validates user input
       while True:
         try:
-          user_answer = self.console.read_string("take a guess: ")
-          self.game.validate_user_answer(user_answer)
-          break
+          user_answer = self.console.read_string("My Guess: ")
+          if user_answer == "hint":
+            self.game.give_hint()
+          else:
+            self.game.validate_user_answer(user_answer)
+            break
         except ValueError as err:
           print(err)
 
       game_won = self.game.check_answer(user_answer)
-
       if game_won:
-         print("Congrats!")
-         self.game.game_over = True
-      elif self.game.attempts == 0:
-         print("No more attempts!")
-         self.game.game_over = True
+        self.game._end_game_win()
+        break
+      else:
+        self.game.decrement_attempt()
+        self.game.store_history(user_answer)
+        self.console.display_game(self.game)
 
-      self.game.decrement_attempt()
-      self.console.display_game(self.game)
+    ## game over
+    if self.game.win:
+       print("congrats you won!")
+    else:
+       print("you lose try again!")
