@@ -56,19 +56,19 @@ class Game:
 
   def give_hint(self):
     if self.hints <= 0:
-      return (None, "You have no more hints.")
+      return (None, "you have no more hints!")
     if len(self.history) == 0:
-      return (None, "You must take a guess first.")
+      return (None, "you must take a guess first!")
 
     last_answer = self.history[-1]
     random_index = random.randint(0, len(last_answer) - 1)
 
     if last_answer[random_index] == self.answer[random_index]:
-      message = f"The number {last_answer[random_index]} in position {random_index + 1} is in the correct position."
+      message = f"the number {last_answer[random_index]} in position {random_index + 1} is in the correct position!"
     elif last_answer[random_index] in self.answer:
-      message = f"The number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code."
+      message = f"the number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code!"
     else:
-      message = f"The number {last_answer[random_index]} in position {random_index + 1} is not in the secret code."
+      message = f"the number {last_answer[random_index]} in position {random_index + 1} is not in the secret code!"
     self.hints -= 1
     return (last_answer, message)
 
@@ -78,25 +78,24 @@ class Game:
     max_range = settings[self.difficulty][1]
 
     if len(user_answer) != total_nums:
-      raise ValueError(f"Input must be {total_nums} numbers.")
+      raise ValueError(f"guess can only be {total_nums} numbers!")
     for number in user_answer:
       if not number.isdigit():
-        raise ValueError("Input can only contain numbers.")
+        raise ValueError("guess can only contain numbers.")
       elif int(number) > max_range:
-        raise ValueError(f"All inputs must be digits between 0 and {max_range}.")
+        raise ValueError(f"each number can only be between 0 and {max_range}!")
     return True
 
   # --------- getters/setters ---------
   @property
   def difficulty(self):
     return self._difficulty
-
   @difficulty.setter
   def difficulty(self, user_input):
     if not isinstance(user_input, int):
       raise ValueError("Input must be a number")
     if user_input not in [1, 2, 3]:
-      raise ValueError("Input must be 1,2,or 3")
+      raise ValueError("Input must be 1, 2, or 3")
     self._difficulty = user_input
 
   # ------- private methods ----------
@@ -110,7 +109,7 @@ class Game:
       answer_string = ''.join(list_nums)
       return answer_string
     else:
-      print("Failed to retrieve data...")
+      raise ConnectionError("Failed to retrieve data...")
 
   def _generate_difficulty_settings(self):
     match self.difficulty:
