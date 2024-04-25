@@ -35,3 +35,27 @@
 - Start and finish coding Player model
 - Test Player model
 - Start UI/interface
+
+### Day 2: April 24, 2024
+#### What I Accomplished Today:
+- Finished Game model:
+  - Created a validate_answer method that validates whether user answer is correct (based on the game difficulty).
+  - I wrote a lot more unit tests today to confirm my methods were working, in the long run this saved me a lot of time!
+  - I rewrote the algorithm for my give_feedback method after doing more testing and accounting for all edge cases. I can't imagine doing this without testing!   
+- Finished Player model (for MVP features it's pretty barebones, will interact more with this for next feature)
+- Almost finished coding the UI files
+  - I'm using two different classes for the user interface, one class that handles all interactions between the models (controller) and one class that displays information to the user and gets inputs
+  - After MVP, I will put more of my focus on implementing features than spending time on the UI since that's whats recommended.
+- Overall progress has been great, I'm having fun and because from the start I kept a sharp focus on following good programming principles (encapsulation, abstraction, SRP, testing) I feel confident about being able to implement new features later this week. 
+
+#### Todays Blockers:
+- My original algorithm for give_feedback didn't account for all the different edge cases (combinations).
+  - I should have done this sooner, but I decided to write a bunch of unit tests that accounted for all combinations of answers. Coding the algo was much easier after this.  
+  - My solution was to make a list from the user and game answers, mutate them as i check for correct locations and numbers.
+  - This solution is only acceptable because our input size is relatively small. 
+- I think I have too many while loops in my controller class. Will look to optimize after getting fully functioning MVP
+- I really want to spend some time and make a nice fun UI... but I can't! My focus will be all things related to backend!
+
+ #### What I Plan To-Do Tomorrow:
+- Finish MVP. I will test for bugs also but by mid-afternoon tomorrow I will have the bare minimum project finished.
+- Start and make good progress on next feature - scoring system. 
