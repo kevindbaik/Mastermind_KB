@@ -1,8 +1,8 @@
 # Mastermind_KB
 
-## Journal
-### Day 1: April 23, 2024
-#### What I Accomplished Today:
+## ✏️ Journal ✏️
+### ⛅ Day 1: April 23, 2024 ⛅
+#### <ins>What I Accomplished Today</ins>:
 - Set up project: created repository, established file structure, installed pipenv, installed requests package, confirmed unittest module works
 - Created an initial plan for features and UI:
   - MVP features: singleplayer, hints, difficulty
@@ -22,22 +22,22 @@
     - Based on difficulty I send in different params to the request
   - I didn't want to make hint feature too powerful, so the give_hint method will randomly select an index, find that digit from the users last attempt and give a statement about it.
 - Testing Game model methods went well, no major issues.
-#### Todays Blockers:
+#### <ins>Todays Blockers</ins>:
 - Deciding which of my attributes should have getters/setters, which attributes and methods should be "private" (python doesn't have a real private option)
   - I know this doesn't really matter since the only person who will ever work in this repo is me, but I'd like to practice good habits.
 - I'm still not sure if I like what my give_hint method returns. I will adjust based on what I do in UI.
   - It's currently a tuple returning the last_answer string and a string message about the hint.
 - My give_feedback method is not the most optimized (uses for loop)
   - Since I know that the input will always have a length of 5 (at most), I think it's acceptable in this situation.
-#### What I Plan To-Do Tomorrow:
+#### <ins>What I Plan To-Do Tomorrow</ins>:
 - Finish coding Game model for MVP features
   - Add method that validates users guess, since I have a difficulty setting that changes the number of digits and range of each digit.
 - Start and finish coding Player model
 - Test Player model
 - Start UI/interface
 
-### Day 2: April 24, 2024
-#### What I Accomplished Today:
+### ⛅ Day 2: April 24, 2024 ⛅
+#### <ins>What I Accomplished Today</ins>:
 - Finished Game model:
   - Created a validate_answer method that validates whether user answer is correct (based on the game difficulty).
   - I wrote a lot more unit tests today to confirm my methods were working, in the long run this saved me a lot of time!
@@ -48,7 +48,7 @@
   - After MVP, I will put more of my focus on implementing features than spending time on the UI since that's whats recommended.
 - Overall progress has been great, I'm having fun and because from the start I kept a sharp focus on following good programming principles (encapsulation, abstraction, SRP, testing) I feel confident about being able to implement new features later this week. 
 
-#### Todays Blockers:
+#### <ins>Todays Blockers</ins>:
 - My original algorithm for give_feedback didn't account for all the different edge cases (combinations).
   - I should have done this sooner, but I decided to write a bunch of unit tests that accounted for all combinations of answers. Coding the algo was much easier after this.  
   - My solution was to make a list from the user and game answers, mutate them as i check for correct locations and numbers.
@@ -56,6 +56,6 @@
 - I think I have too many while loops in my controller class. Will look to optimize after getting fully functioning MVP
 - I really want to spend some time and make a nice fun UI... but I can't! My focus will be all things related to backend!
 
- #### What I Plan To-Do Tomorrow:
+ #### <ins>What I Plan To-Do Tomorrow</ins>:
 - Finish MVP. I will test for bugs also but by mid-afternoon tomorrow I will have the bare minimum project finished.
 - Start and make good progress on next feature - scoring system. 
