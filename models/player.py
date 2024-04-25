@@ -8,10 +8,11 @@ class Player:
 
   # ---- getter/setter ------
   @property
-  def name(self):
+  def name(self) -> str:
     return self._name
+
   @name.setter
-  def name(self, user_input):
+  def name(self, user_input: str):
     if len(user_input) >= 20:
       raise ValueError("that name is too long!")
     if not user_input.isalpha():

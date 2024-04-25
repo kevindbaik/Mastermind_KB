@@ -44,10 +44,12 @@ class Controller:
             self.console.display_header("ok...give me one second...", "creating my secret code...")
             self.game = Game(difficulty)
             break
-        except (ValueError, ConnectionError) as err:
+        except ValueError as err:
             print(err)
-            if isinstance(err, ConnectionError):
-                return
+        except ConnectionError as err:
+           print(err)
+           if input("do you want me to retry connecting? (y/n): ").upper() != "Y":
+            return
     ## game starts
     self.console.display_game(self.game)
     while not self.game.game_over:
@@ -68,7 +70,7 @@ class Controller:
 
       game_won = self.game.check_answer(user_answer)
       if game_won:
-        self.game._end_game_win()
+        self.game.end_game_win()
         break
       else:
         self.game.decrement_attempt()

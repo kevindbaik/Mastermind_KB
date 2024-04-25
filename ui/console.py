@@ -1,10 +1,12 @@
+from models.game import Game
+
 class Console:
   # ------- read methods ----------
-  def read_string(self, prompt):
+  def read_string(self, prompt: str) -> str:
     string = input(prompt)
     return string
 
-  def read_int(self, prompt, max):
+  def read_int(self, prompt: str, max: int) -> int:
     try:
       string = input(prompt)
       number = int(string)
@@ -15,7 +17,7 @@ class Console:
       raise ValueError(f"hey that's not a valid number!")
 
   # ------- display methods ----------
-  def display_header(self, *strings):
+  def display_header(self, *strings: str):
     max_length = max(len(string) for string in strings)
     print("")
     print("=" * max_length)
@@ -24,14 +26,14 @@ class Console:
     print("=" * max_length)
     print("")
 
-  def display_message(self, string):
-    print(string)
+  def display_message(self, message: str):
+    print(message)
     print("")
 
-  def display_error(self, message):
+  def display_error(self, message: str):
       print(f"Error: {message}")
 
-  def display_difficulty(self, name):
+  def display_difficulty(self, name: str):
     print("")
     print("===============================")
     print(f"hello {name.lower()}! choose a difficulty: ")
@@ -42,10 +44,7 @@ class Console:
     print("3 (Hard)")
     print("")
 
-  def display_game_start(self):
-    print("")
-
-  def display_welcome(self, message):
+  def display_welcome(self, message: str):
     lines = message.split('\n')
     max_length = max(len(line) for line in lines)
     print("+" + "-" * (max_length + 2) + "+")
@@ -60,7 +59,7 @@ class Console:
     print("3 (Exit)")
     print("")
 
-  def display_game(self, game):
+  def display_game(self, game: Game):
     print("=" * 50)
     print(f"difficulty: {game.difficulty}")
     print(f"hints available (type hint): {game.hints}")
