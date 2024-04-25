@@ -10,4 +10,4 @@
   - WIP
     
 ## ✏️ My Journal ✏️
-**_Click [here](/readme/journal.md) to read my journal where I documented my daily progress in a mock standup way!_**
+**_Click [here](/readme/journal.md) to read my journal where I documented my daily progress!_**
