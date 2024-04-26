@@ -79,6 +79,7 @@ class Controller:
 
     ## game over
     if self.game.win:
-      self.console.display_message("congrats you beat me!")
+      self.player.score = self.game.calculate_score()
+      self.console.display_score(self.player.name, self.player.score)
     else:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")

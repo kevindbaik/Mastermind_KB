@@ -35,7 +35,7 @@ class Game:
     self.win = False
     self.game_over = True
 
-  def give_feedback(self, user_answer: str) -> Dict[str, int]:
+  def give_feedback(self, user_answer: str) -> Tuple[int, int]:
     correct_number = 0
     correct_location = 0
     ua_list = list(user_answer)
@@ -54,8 +54,7 @@ class Game:
           ga_list.remove(number)
           correct_number += 1
 
-    feedback = { "correct_location" : correct_location, "correct_number" : correct_number }
-    return feedback
+    return (correct_location, correct_number)
 
   def give_hint(self) -> str:
     if self.hints <= 0:
@@ -88,6 +87,12 @@ class Game:
         raise ValueError(f"each number can only be between 0 and {max_range}...")
     return True
 
+  def calculate_score(self) -> int:
+    score = 0
+    score += self.attempts * 100
+    score += self.difficulty * 200
+    score += self.hints * 100
+    return score
   # --------- getters/setters ---------
   @property
   def difficulty(self) -> int:
