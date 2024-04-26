@@ -36,7 +36,7 @@
 - Test Player model
 - Start UI/interface
 
-### ⛅ Day 2: April 24, 2024 ⛅
+### ⛅⛅ Day 2: April 24, 2024 ⛅⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished Game model:
   - Created a validate_answer method that validates whether user answer is correct (based on the game difficulty).
@@ -60,7 +60,7 @@
 - Finish MVP. I will test for bugs also but by mid-afternoon tomorrow I will have the bare minimum project finished.
 - Start and make good progress on next feature - scoring system. 
 
-### ⛅ Day 3: April 25, 2024 ⛅
+### ⛅⛅⛅ Day 3: April 25, 2024 ⛅⛅⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished core features and user interface for MVP
 - Added type annotations on most of my methods
