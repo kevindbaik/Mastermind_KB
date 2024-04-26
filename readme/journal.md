@@ -59,3 +59,28 @@
  #### <ins>What I Plan To-Do Tomorrow</ins>:
 - Finish MVP. I will test for bugs also but by mid-afternoon tomorrow I will have the bare minimum project finished.
 - Start and make good progress on next feature - scoring system. 
+
+### ⛅ Day 3: April 25, 2024 ⛅
+#### <ins>What I Accomplished Today</ins>:
+- Finished core features and user interface for MVP
+- Added type annotations on most of my methods
+  - I was thinking about adding these for my variables as well... but after doing some research decided it could seem a bit excessive. 
+- Cleaned up code, wrote additional methods, changed existing methods to follow good code principles
+  - My controller class is now only responsible for "controlling" the game by managing the interaction between models
+  - My console class is now only responsible for taking inputs from user, showing outputs to user
+- Started and made good progress on new feature: scores
+  - Created the rules of how scoring will be calculated
+  - Finished the score calculating method and unit tested for different scenarios
+
+#### <ins>Todays Blockers</ins>:
+- Understanding the game flow and making sure it's perfect took me some time to figure out. 
+  - Since my game flows synchronously where it waits for user input, processes it, updates the game state, and loops back.... managing how these steps were handled took some trial and error.
+  - I've been looking to see if improvements to game flow can be made by applying asynchronous code, but I can't find a reason too right now. Maybe as the application gets more complex or when I implement multiplayer.
+- Creating an engaging scoring system and thinking about a creative way to implement the feature. 
+  - Currently I have the bare minimum, a method that calculates the score based on the games remaining attributes when the game is won (attempts remaining, difficulty, and hints remaining).
+- I'm looking for more ways to incorporate the Player class. It's empty at the moment. 
+
+ #### <ins>What I Plan To-Do Tomorrow</ins>:
+- Finish score feature including implementing a high score leaderboard. 
+  - Tomorrow I'll start working with a database! I'm choosing SQLite since it's lightweight and part of Pythons standard library. It's perfect for a small application like this.
+- Begin next feature after score.... multiplayer! :D
