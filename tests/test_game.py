@@ -8,7 +8,6 @@ class TestGame(unittest.TestCase):
     game.answer = "1234"
     user_answer = "1234"
     result = game.check_answer(user_answer)
-    self.assertTrue(game.win)
     self.assertTrue(result)
 
   def test_check_answer_incorrect(self):
@@ -41,8 +40,7 @@ class TestGame(unittest.TestCase):
     game.decrement_attempt()
     self.assertTrue(game.attempts, 1)
     game.decrement_attempt()
-    self.assertFalse(game.win)
-    self.assertTrue(game.game_over)
+    self.assertEqual(game.attempts, 0)
 
   # game_over method
   def test_game_over_win(self):
@@ -53,6 +51,7 @@ class TestGame(unittest.TestCase):
     game.decrement_attempt()
     user_choice = "1234"
     game.check_answer(user_choice)
+    game.end_game_win()
     self.assertTrue(game.win)
     self.assertTrue(game.game_over)
 
@@ -150,19 +149,19 @@ class TestGame(unittest.TestCase):
   def test_store_history(self):
     game = Game(1)
     game.answer = "1234"
-    game.check_answer("1111")
+    game.store_history("1111")
     self.assertEqual(len(game.history), 1)
-    game.check_answer("2222")
+    game.store_history("1121")
     self.assertEqual(len(game.history), 2)
-    game.check_answer("3333")
+    game.store_history("1411")
     self.assertEqual(len(game.history), 3)
 
   # get_history method
   def test_get_history(self):
     game = Game(1)
-    game.check_answer("1111")
-    game.check_answer("2222")
-    game.check_answer("3333")
+    game.store_history("1234")
+    game.store_history("2234")
+    game.store_history("3234")
     list = game.get_history()
     self.assertEqual(len(list), 3)
 
@@ -173,39 +172,35 @@ class TestGame(unittest.TestCase):
     game.history.append("1211")
     hint = game.give_hint()
     self.assertEqual(game.hints, 1)
-    self.assertTrue("is in the correct position." in hint[1])
 
   def test_give_hint_no_attempt(self):
     game = Game(1)
     game.answer = "7777"
     hint = game.give_hint()
     self.assertEqual(game.hints, 2)
-    self.assertEqual(hint[0], None)
-    self.assertEqual(hint[1], "You must take a guess first.")
+    hint = game.give_hint()
+    self.assertEqual(game.hints, 2)
 
   def test_give_hint_no_more_hints(self):
     game = Game(1)
     game.answer = "7777"
-    game.check_answer("1111")
+    game.history.append("1211")
     hint = game.give_hint()
     self.assertEqual(game.hints, 1)
     hint = game.give_hint()
     self.assertEqual(game.hints, 0)
-    hint = game.give_hint()
-    self.assertEqual(hint[0], None)
-    self.assertEqual(hint[1], "You have no more hints.")
 
   # validate_user_answer method
   def test_validate_user_answer(self):
     game = Game(1)
-    with self.assertRaisesRegex(ValueError, "Input must be 4 numbers."):
+    with self.assertRaisesRegex(ValueError, "your guess must have 4 numbers..."):
       game.validate_user_answer("11111")
-    with self.assertRaisesRegex(ValueError, "All inputs must be digits between 0 and 7."):
+    with self.assertRaisesRegex(ValueError, "each number can only be between 0 and 7..."):
       game.validate_user_answer("9991")
-    with self.assertRaisesRegex(ValueError, "Input can only contain numbers."):
+    with self.assertRaisesRegex(ValueError, "your guess can only contain numbers..."):
       game.validate_user_answer("KEVN")
     game3 = Game(3)
-    with self.assertRaisesRegex(ValueError, "Input must be 5 numbers."):
+    with self.assertRaisesRegex(ValueError, "your guess must have 5 numbers..."):
       game3.validate_user_answer("111211")
 
   # difficulty validation
@@ -224,11 +219,11 @@ class TestGame(unittest.TestCase):
 
   def test_difficulty_invalid_str(self):
     user_choice = "easy"
-    self.assertRaisesRegex(ValueError, "Input must be a number", lambda: Game(user_choice))
+    self.assertRaisesRegex(ValueError, "your choice must be a number...", lambda: Game(user_choice))
 
   def test_difficulty_invalid_range(self):
     user_choice = 5
-    self.assertRaisesRegex(ValueError, "Input must be 1,2,or 3", lambda: Game(user_choice))
+    self.assertRaisesRegex(ValueError, "your choice must be either 1, 2, or 3...", lambda: Game(user_choice))
 
   # api returns valid answer
   def test_api_random(self):

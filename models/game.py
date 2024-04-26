@@ -42,7 +42,7 @@ class Game:
     ga_list = list(self.answer)
 
     for i in range(len(ua_list)):
-      if ua_list[i] == self.answer[i]:
+      if ua_list[i] == ga_list[i]:
         correct_location += 1
         correct_number += 1
         ua_list[i] = None
@@ -57,23 +57,22 @@ class Game:
     feedback = { "correct_location" : correct_location, "correct_number" : correct_number }
     return feedback
 
-  def give_hint(self) -> None:
+  def give_hint(self) -> str:
     if self.hints <= 0:
-      hint = "you have no more hints!"
+      raise Exception("you have no more hints...")
     elif len(self.history) == 0:
-      hint = "you must take a guess first!"
+      raise Exception("you must take a guess first...")
     else:
+      self.hints -= 1
       last_answer = self.history[-1]
       random_index = random.randint(0, len(last_answer) - 1)
       if last_answer[random_index] == self.answer[random_index]:
-        hint = self._display_hint_message_correct(last_answer, random_index)
+        return self._display_hint_message_correct(last_answer, random_index)
       elif last_answer[random_index] in self.answer:
-        hint = self._display_hint_message_partial(last_answer, random_index)
+        return self._display_hint_message_partial(last_answer, random_index)
       else:
-        hint = self._display_hint_incorrect(last_answer, random_index)
-      self.hints -= 1
-    print(f"hints remaining: {self.hints}")
-    print(hint)
+        return self._display_hint_incorrect(last_answer, random_index)
+
 
   def validate_user_answer(self, user_answer: str) -> bool:
     settings = { 1: (4,7), 2: (4,9), 3: (5,9) }
@@ -81,12 +80,12 @@ class Game:
     max_range = settings[self.difficulty][1]
 
     if len(user_answer) != total_nums:
-      raise ValueError(f"your guess must be {total_nums} numbers!")
+      raise ValueError(f"your guess must have {total_nums} numbers...")
     for number in user_answer:
       if not number.isdigit():
-        raise ValueError("your guess can only contain numbers!")
+        raise ValueError("your guess can only contain numbers...")
       elif int(number) > max_range:
-        raise ValueError(f"each number in your guess can only be between 0 and {max_range}!")
+        raise ValueError(f"each number can only be between 0 and {max_range}...")
     return True
 
   # --------- getters/setters ---------
@@ -97,9 +96,9 @@ class Game:
   @difficulty.setter
   def difficulty(self, user_input: int):
     if not isinstance(user_input, int):
-      raise ValueError("input must be a number!")
+      raise ValueError("your choice must be a number...")
     if user_input not in [1, 2, 3]:
-      raise ValueError("input must be 1, 2, or 3!")
+      raise ValueError("your choice must be either 1, 2, or 3...")
     self._difficulty = user_input
 
   # ------- private methods ----------
@@ -124,8 +123,12 @@ class Game:
         return (5, 9)
 
   def _display_hint_message_correct(self, last_answer: str, random_index: int) -> str:
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is in the correct position!"
-  def _display_hint_message_partial(self, last_answer, random_index):
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code!"
-  def _display_hint_incorrect(self, last_answer, random_index):
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the secret code!"
+    return f"the number {last_answer[random_index]} in position {random_index + 1} is in the correct position..."
+  def _display_hint_message_partial(self, last_answer: str, random_index: int) -> str:
+    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code..."
+  def _display_hint_incorrect(self, last_answer: str, random_index: int) -> str:
+    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the secret code..."
+  def _display_hint_no_hint(self):
+    return "you have no more hints..."
+  def _display_hint_no_attempt(self):
+    return "you must take a guess first..."

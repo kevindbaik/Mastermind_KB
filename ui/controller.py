@@ -17,7 +17,7 @@ class Controller:
         menu_choice = self.console.read_int("I choose: ", 3)
         break
       except ValueError as err:
-        print(err)
+        self.console.display_error(err)
 
     match menu_choice:
       case 1: # play game
@@ -36,7 +36,7 @@ class Controller:
             self.player = Player(name)
             break
         except ValueError as err:
-            print(err)
+            self.console.display_error(err)
     self.console.display_difficulty(name)
     while True:
         try:
@@ -45,9 +45,9 @@ class Controller:
             self.game = Game(difficulty)
             break
         except ValueError as err:
-            print(err)
+            self.console.display_error(err)
         except ConnectionError as err:
-           print(err)
+           self.console.display_error(err)
            if input("do you want me to retry connecting? (y/n): ").upper() != "Y":
             return
     ## game starts
@@ -61,12 +61,12 @@ class Controller:
         try:
           user_answer = self.console.read_string("My Guess: ")
           if user_answer == "hint":
-            self.game.give_hint()
+            self.console.display_hint(self.game.give_hint())
           else:
             self.game.validate_user_answer(user_answer)
             break
-        except ValueError as err:
-          print(err)
+        except (ValueError, Exception) as err:
+          self.console.display_error(err)
 
       game_won = self.game.check_answer(user_answer)
       if game_won:
@@ -79,6 +79,6 @@ class Controller:
 
     ## game over
     if self.game.win:
-       print("congrats you won!")
+      self.console.display_message("congrats you beat me!")
     else:
-       print("you lose try again!")
+      self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")

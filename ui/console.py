@@ -11,10 +11,10 @@ class Console:
       string = input(prompt)
       number = int(string)
       if number <= 0 or number > max:
-        raise ValueError(f"hey that's not a valid choice!")
+        raise ValueError(f"that's not a valid number...")
       return number
     except:
-      raise ValueError(f"hey that's not a valid number!")
+      raise ValueError(f"that's not a valid number...")
 
   # ------- display methods ----------
   def display_header(self, *strings: str):
@@ -27,11 +27,15 @@ class Console:
     print("")
 
   def display_message(self, message: str):
+    print("")
     print(message)
     print("")
 
+  def display_hint(self, message: str):
+    print(f"hint: {message}")
+
   def display_error(self, message: str):
-      print(f"Error: {message}")
+    print(f"input error: {message}")
 
   def display_difficulty(self, name: str):
     print("")
