@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 class Game:
   def __init__(self, difficulty):
     self.difficulty = difficulty
-    self.answer = "1111"
+    self.answer = self._generate_answer()
     self.attempts = 10
     self.history = []
     self.hints = 2

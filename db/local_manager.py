@@ -1,6 +1,6 @@
 import sqlite3
 
-class Manager():
+class LocalManager():
   def __init__(self):
     self.path = 'db/game.db'
 

@@ -1,12 +1,12 @@
 from models.game import Game
 from models.player import Player
 from .console import Console
-from db.manager import Manager
+from db.local_manager import LocalManager
 
 class Controller:
   def __init__(self):
     self.console = Console()
-    self.manager = Manager()
+    self.local_manager = LocalManager()
     self.player = None
     self.game = None
 
@@ -88,6 +88,7 @@ class Controller:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")
 
   def view_scores(self):
-    high_scores = self.manager.get_all_high_scores()
+    high_scores = self.local_manager.get_all_high_scores()
+    print("Top 10 Scores:")
     for score in high_scores:
       print(f"Name: {score[0]}, Score: {score[1]}, Difficulty: {score[2]}")
