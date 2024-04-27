@@ -4,7 +4,7 @@ import os.path
 from models.game import Game
 
 class OnlineManager():
-  def __init__(self, path):
+  def __init__(self):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     self.path = os.path.join(BASE_DIR, "online_game.db")
     directory = os.path.dirname(self.path)
@@ -36,12 +36,26 @@ class OnlineManager():
       cur.execute("SELECT * FROM games WHERE id = ?", (game_id,))
       game = cur.fetchone()
       if game:
-        print("FFFFFF" ,game)
         return Game(id=game[0], player_id=game[1], difficulty=game[2], answer=game[3], attempts=game[4], history=json.loads(game[5]), hints=game[6], win=game[7], game_over=game[8])
-      return None
+      else:
+        return None
     except sqlite3.Error as err:
       print(f"Database error: {err}")
+    finally:
+      con.close()
 
+  def update_game(self, game_id, game) -> None:
+    try:
+      con = sqlite3.connect(self.path)
+      cur = con.cursor()
+      history_json = json.dumps(game.history)
+      cur.execute("UPDATE games SET attempts = ?, win = ?, game_over = ?, history = ?, hints = ? WHERE id = ?",
+                        (game.attempts, game.win, game.game_over, history_json, game.hints, game_id))
+      con.commit()
+    except sqlite3.Error as err:
+      print(f"Database error: {err}")
+    finally:
+      con.close()
 
   def save_game_to_db(self, game: Game):
     try:
