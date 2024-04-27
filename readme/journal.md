@@ -83,4 +83,25 @@
  #### <ins>What I Plan To-Do Tomorrow</ins>:
 - Finish score feature including implementing a high score leaderboard. 
   - Tomorrow I'll start working with a database! I'm choosing SQLite since it's lightweight and part of Pythons standard library. It's perfect for a small application like this.
-- Begin next feature after score.... multiplayer! :D
+- Begin next feature after score.... online! :D
+
+### ⛅⛅⛅ Day 4: April 26, 2024 ⛅⛅⛅
+#### <ins>What I Accomplished Today</ins>:
+- Finished functionality and
+- Created script for creating database, create table, and seed data for storing local game scores.
+  - Since this is small scale and I'm focused on storing scores locally, I'm using sqlite. 
+  - I created two methods, one to add_score (add to table) and one to get_highest_scores(query table in descending order, pick top 10).
+- Starting the process of transforming my application into a RESTful service as well, so the game can be played not just on the console. 
+    - Since I know my game works locally now and through the console, I'm going to turn my attention for the game to be playable through HTTP requests. 
+    - I'll be using Flask to build my API's and use Postman to test the routes.
+    - I've defined my endpoints, now time to build the routes!
+
+#### <ins>Todays Blockers</ins>:
+- I haven't used Flask to build out a server in at least 4 months, so it took a little bit of time to refresh my concepts. 
+  - However it shouldn't be bad at all, API's are fun to make and I love Postman.
+- I also haven't used raw SQL in awhile, but it's very easy to pick back up which is why I originally loved it so much.
+- I'm going to need to readjust some existing code, specifically my game model
+
+ #### <ins>What I Plan To-Do Tomorrow</ins>:
+- Finish implementing API routes, test, and handle responses appropriately.
+  - Play a full game of Mastermind on Postman
