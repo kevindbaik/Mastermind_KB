@@ -40,9 +40,9 @@ class Console:
 
   def display_difficulty(self, name: str):
     print("")
-    print("===============================")
+    print("=" * 50)
     print(f"hello {name.lower()}! choose a difficulty: ")
-    print("===============================")
+    print("=" * 50)
     print("")
     print("1 (Easy)")
     print("2 (Medium)")
@@ -50,8 +50,16 @@ class Console:
     print("")
 
   def display_score(self, name: str, score: int):
-    print(f"congratulations {name}, you won and scored: {score}!")
-
+    print("")
+    print("+" * 50)
+    print("=" * 50)
+    print("")
+    print(f"congratulations {name}, you won!")
+    print(f"total score: {score}")
+    print("")
+    print("=" * 50)
+    print("+" * 50)
+    print("")
   def display_welcome(self, message: str):
     lines = message.split('\n')
     max_length = max(len(line) for line in lines)
@@ -62,9 +70,9 @@ class Console:
 
   def display_menu(self):
     print("")
-    print("1 (Play Against Computer)")
-    print("2 (Read Rules)")
-    print("3 (Exit)")
+    print("1 (Play Local)")
+    print("2 (Play Online)")
+    print("3 (View High Scores)")
     print("")
 
   def display_game(self, game: Game):
