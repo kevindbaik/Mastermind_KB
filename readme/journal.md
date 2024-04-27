@@ -91,17 +91,18 @@
 - Created script for creating database, create table, and seed data for storing local game scores.
   - Since this is small scale and I'm focused on storing scores locally, I'm using sqlite. 
   - I created two methods, one to add_score (add to table) and one to get_highest_scores(query table in descending order, pick top 10).
-- Starting the process of transforming my application into a RESTful service as well, so the game can be played not just on the console. 
-    - Since I know my game works locally now and through the console, I'm going to turn my attention for the game to be playable through HTTP requests. 
+- Started the process of turning the game into a RESTful service as well, so the game can be played not just on the console. 
+    - Since I know my game works locally now and through the console, I'm going to build the game to be playable through HTTP requests as well. 
     - I'll be using Flask to build my API's and use Postman to test the routes.
-    - I've defined my endpoints, now time to build the routes!
+    - Finishing defining endpoints and working on building routes
+    - Added id attributes to both Game and Player class for "online" version, won't be used for "local" version.
 
 #### <ins>Todays Blockers</ins>:
-- I haven't used Flask to build out a server in at least 4 months, so it took a little bit of time to refresh my concepts. 
-  - However it shouldn't be bad at all, API's are fun to make and I love Postman.
-- I also haven't used raw SQL in awhile, but it's very easy to pick back up which is why I originally loved it so much.
-- I'm going to need to readjust some existing code, specifically my game model
+- Since HTTP requests are stateless, I need to use a database to handle game state between requests. 
+- Completely forgot to add serialize and deserialize methods for classes to help store game state in database... 
+- Deciding API endpoints and way the user can interact with the game through only requests.
 
  #### <ins>What I Plan To-Do Tomorrow</ins>:
-- Finish implementing API routes, test, and handle responses appropriately.
-  - Play a full game of Mastermind on Postman
+- Finish or get close to completing API version of Mastermind:
+  - Decide on db and create schema and new to persist game states
+  - Finish building API endpoints that allow user to interact with game. Test and handle responses appropriately.
