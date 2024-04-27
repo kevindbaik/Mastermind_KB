@@ -1,6 +1,6 @@
 import sqlite3
 
-con = sqlite3.connect('db/game.db')
+con = sqlite3.connect('local_game.db')
 cur = con.cursor()
 
 cur.execute('''CREATE TABLE IF NOT EXISTS local_leaderboard (

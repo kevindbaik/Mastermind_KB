@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 
 class Game:
-  def __init__(self, difficulty):
+  def __init__(self, difficulty, player_id=None, id=None):
     self.difficulty = difficulty
     self.answer = self._generate_answer()
     self.attempts = 10
@@ -12,6 +12,9 @@ class Game:
     self.hints = 2
     self.win = False
     self.game_over = False
+    # for API
+    self.player_id = player_id
+    self.id = id
 
   # ------- public methods ----------
   def check_answer(self, user_answer: str) -> bool:

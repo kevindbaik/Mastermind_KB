@@ -2,7 +2,7 @@ import sqlite3
 
 class LocalManager():
   def __init__(self):
-    self.path = 'db/game.db'
+    self.path = 'db/local_game.db'
 
   def add_score(self, name: str, score: int, difficulty: int) -> None:
     con = sqlite3.connect(self.path)

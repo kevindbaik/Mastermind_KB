@@ -1,7 +1,10 @@
 class Player:
-  def __init__(self, name):
+  def __init__(self, name, id=None, email=None):
     self.name = name
     self.score = 0
+    # for API
+    self.id = id
+    self.email = email
 
 # ------- methods -------
   def make_guess(self, guess):
