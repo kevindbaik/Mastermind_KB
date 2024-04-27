@@ -10,8 +10,8 @@ class Controller:
 
   def run(self):
     self.console.display_welcome("Welcome to Mastermind!")
-    self.console.display_menu()
 
+    self.console.display_menu()
     while True:
       try:
         menu_choice = self.console.read_int("I choose: ", 3)
