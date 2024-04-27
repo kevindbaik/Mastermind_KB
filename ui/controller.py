@@ -1,10 +1,12 @@
 from models.game import Game
 from models.player import Player
 from .console import Console
+from db.manager import Manager
 
 class Controller:
   def __init__(self):
     self.console = Console()
+    self.manager = Manager()
     self.player = None
     self.game = None
 
@@ -81,5 +83,6 @@ class Controller:
     if self.game.win:
       self.player.score = self.game.calculate_score()
       self.console.display_score(self.player.name, self.player.score)
+      self.manager.add_score(self.player.name, self.player.score, self.game.difficulty)
     else:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")

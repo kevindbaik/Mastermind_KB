@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 class Game:
   def __init__(self, difficulty):
     self.difficulty = difficulty
-    self.answer = self._generate_answer()
+    self.answer = "1111"
     self.attempts = 10
     self.history = []
     self.hints = 2
@@ -91,7 +91,7 @@ class Game:
     score = 0
     score += self.attempts * 100
     score += self.difficulty * 200
-    score += self.hints * 100
+    score += self.hints * 200
     return score
   # --------- getters/setters ---------
   @property

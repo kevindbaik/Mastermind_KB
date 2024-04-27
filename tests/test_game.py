@@ -198,23 +198,23 @@ class TestGame(unittest.TestCase):
   # calculate score
   def test_calculate_score_hard(self):
     game = Game(3)
+    self.assertEqual(game.calculate_score(), 2000)
+    game.decrement_attempt()
+    game.decrement_attempt()
+    self.assertEqual(game.calculate_score(), 1800)
+    game.history.append("1111")
+    game.give_hint()
+    self.assertEqual(game.calculate_score(), 1600)
+
+  def test_calculate_score_medium(self):
+    game = Game(2)
     self.assertEqual(game.calculate_score(), 1800)
     game.decrement_attempt()
     game.decrement_attempt()
     self.assertEqual(game.calculate_score(), 1600)
     game.history.append("1111")
     game.give_hint()
-    self.assertEqual(game.calculate_score(), 1500)
-
-  def test_calculate_score_medium(self):
-    game = Game(2)
-    self.assertEqual(game.calculate_score(), 1600)
-    game.decrement_attempt()
-    game.decrement_attempt()
     self.assertEqual(game.calculate_score(), 1400)
-    game.history.append("1111")
-    game.give_hint()
-    self.assertEqual(game.calculate_score(), 1300)
 
   def test_calculate_score_easy(self):
     game = Game(1)
@@ -224,7 +224,7 @@ class TestGame(unittest.TestCase):
     self.assertEqual(game.calculate_score(), 1200)
     game.history.append("1111")
     game.give_hint()
-    self.assertEqual(game.calculate_score(), 1100)
+    self.assertEqual(game.calculate_score(), 1000)
 
   # difficulty validation
   def test_difficulty_valid(self):
