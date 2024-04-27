@@ -4,15 +4,17 @@ from typing import Dict, List, Tuple
 
 
 class Game:
-  def __init__(self, difficulty, player_id=None, id=None):
+  def __init__(self, difficulty, answer=None, attempts=10, history=[], hints=2, win=False, game_over=False,  player_id=None, id=None):
     self.difficulty = difficulty
-    self.answer = self._generate_answer()
-    self.attempts = 10
-    self.history = []
-    self.hints = 2
-    self.win = False
-    self.game_over = False
-    # for API
+    if answer is None:
+      self.answer = self._generate_answer()
+    else:
+      self.answer = answer
+    self.attempts = attempts
+    self.history = history
+    self.hints = hints
+    self.win = win
+    self.game_over = game_over
     self.player_id = player_id
     self.id = id
 
