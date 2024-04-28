@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = 'alright_then_keep_your_secrets'
 online_manager = OnlineManager()
 
-@app.route('/api/user', methods=['POST'])
+@app.route('/api/player', methods=['POST'])
 def create_player():
   data = request.get_json()
   name = data.get('name')
@@ -32,7 +32,7 @@ def create_player():
   else:
     return response, status_code
 
-@app.route('/api/user/login', methods=['POST'])
+@app.route('/api/player/login', methods=['POST'])
 def login_player():
   data = request.get_json()
   email = data.get('email')
@@ -52,7 +52,14 @@ def login_player():
   else:
       return jsonify({'error': 'Invalid email or password'}), 401
 
-@app.route('/api/user/logout', methods=['GET'])
+@app.route('/api/player/<int:player_id>/games', methods=['GET'])
+def get_player_games(player_id):
+  games = online_manager.get_player_games(player_id)
+  if isinstance(games, dict) and 'error' in games:
+    return jsonify(games), 500
+  return jsonify({'games': games}), 200
+
+@app.route('/api/player/logout', methods=['GET'])
 def logout_player():
   if 'player_id' in session:
       session.pop('player_id', None)
@@ -66,13 +73,16 @@ def start_game():
     data = request.get_json()
     difficulty = data.get('difficulty')
 
+    if 'player_id' not in session:
+      return jsonify({'error': 'You must be logged in to play'}), 400
+
     try:
-      game = Game(difficulty, player_id=player_id)
+      game = Game(difficulty, player_id=session['player_id'])
     except ValueError as err:
       return jsonify({'error': str(err)}), 400
 
     game_id = online_manager.save_game_to_db(game)
-    return jsonify({ 'message': 'Game started successfully', 'game_id': game_id, 'player_id': player_id })
+    return jsonify({ 'message': 'Game started successfully', 'game_id': game_id, 'player_id': session['player_id']}), 201
 
 @app.route('/api/game/<int:game_id>', methods=['GET'])
 def get_status(game_id):
@@ -80,6 +90,10 @@ def get_status(game_id):
 
   if not game:
     return jsonify({ 'message': 'Game not found'}), 404
+  if game.game_over:
+    return jsonify({'message': 'Game has already ended'}), 200
+  if game.player_id != session['player_id']:
+    return jsonify({'error': 'Game does not belong to user'}),403
 
   game_status = {
     'game_id': game_id,
@@ -104,6 +118,8 @@ def make_guess(game_id):
     return jsonify({'error': 'Game not found'}), 404
   if game.game_over:
     return jsonify({'message': 'Game has already ended'}), 200
+  if game.player_id != session['player_id']:
+    return jsonify({'error': 'Game does not belong to user'}),403
 
   try:
     game.validate_user_answer(guess)
@@ -150,6 +166,8 @@ def get_hint(game_id):
     return jsonify({'error': 'Game not found'}), 404
   if game.game_over:
     return jsonify({'message': 'Game has already ended'}), 200
+  if game.player_id != session['player_id']:
+    return jsonify({'error': 'Game does not belong to user'}),403
 
   try:
     hint = game.give_hint()

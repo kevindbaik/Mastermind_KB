@@ -37,14 +37,36 @@ class OnlineManager():
       player = cur.fetchone()
       if player:
         return dict(player)
+      else:
+        return None
     except sqlite3.Error as err:
       return jsonify({'error': str(err)})
+    finally:
+      con.close()
+
+  def get_player_games(self, player_id):
+    try:
+      con = sqlite3.connect(self.path)
+      con.row_factory = sqlite3.Row
+      cur = con.cursor()
+      cur.execute('SELECT * FROM games WHERE player_id = ?', (player_id,))
+      games = cur.fetchall()
+      games_list = []
+      for game in games:
+          game_dict = dict(game)
+          if game_dict['history']:
+              game_dict['history'] = json.loads(game_dict['history']) #converts json string back to py list
+          games_list.append(game_dict)
+      return games_list
+    except sqlite3.Error as err:
+      return {'error': str(err)}
     finally:
       con.close()
 
   def get_game(self, game_id: int) -> Game:
     try:
       con = sqlite3.connect(self.path)
+      con.row_factory = sqlite3.Row
       cur = con.cursor()
       cur.execute("SELECT * FROM games WHERE id = ?", (game_id,))
       game = cur.fetchone()
@@ -74,7 +96,7 @@ class OnlineManager():
     try:
       con = sqlite3.connect(self.path)
       cur = con.cursor()
-      history_json = json.dumps(game.history)
+      history_json = json.dumps(game.history) #converts my list to a json string
       cur.execute("INSERT INTO games (player_id, difficulty, answer, attempts, history, hints, win, game_over) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       (game.player_id, game.difficulty, game.answer, game.attempts, history_json, game.hints, game.win, game.game_over))
       con.commit()
