@@ -36,7 +36,7 @@
 - Test Player model
 - Start UI/interface
 
-### ⛅⛅ Day 2: April 24, 2024 ⛅⛅
+### ⛅ Day 2: April 24, 2024 ⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished Game model:
   - Created a validate_answer method that validates whether user answer is correct (based on the game difficulty).
@@ -60,7 +60,7 @@
 - Finish MVP. I will test for bugs also but by mid-afternoon tomorrow I will have the bare minimum project finished.
 - Start and make good progress on next feature - scoring system. 
 
-### ⛅⛅⛅ Day 3: April 25, 2024 ⛅⛅⛅
+### ⛅ Day 3: April 25, 2024 ⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished core features and user interface for MVP
 - Added type annotations on most of my methods
@@ -85,7 +85,7 @@
   - Tomorrow I'll start working with a database! I'm choosing SQLite since it's lightweight and part of Pythons standard library. It's perfect for a small application like this.
 - Begin next feature after score.... online! :D
 
-### ⛅⛅⛅ Day 4: April 26, 2024 ⛅⛅⛅
+### ⛅ Day 4: April 26, 2024 ⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished functionality and
 - Created script for creating database, create table, and seed data for storing local game scores.
@@ -103,6 +103,27 @@
 - Deciding API endpoints and way the user can interact with the game through only requests.
 
  #### <ins>What I Plan To-Do Tomorrow</ins>:
-- Finish or get close to completing API version of Mastermind:
-  - Decide on db and create schema and new to persist game states
-  - Finish building API endpoints that allow user to interact with game. Test and handle responses appropriately.
+- Finish or get close to completing API routes for online Mastermind:
+  - Decide on db and create tables, seeders + also decide if I want to use an ORM
+  - Finish building API endpoints that allow user to interact with game. Test and handle validations + responses appropriately.
+
+### ⛅ Day 5: April 26, 2024 ⛅
+#### <ins>What I Accomplished Today</ins>:
+- Finished building API including routes for player signup/login/logout, playing/seeing their games, making guesses and hints
+- Also built a manager class thats acts as a middleman between the API and database...
+  - I decided to not use an ORM and also just use sqlite for my db. I don't think this application needs it, theres not too many SQL operations and I'd like to keep it as lightweight as possible.
+  - I'm using Flask session to handle tracking player sessions when they login/logout
+- Tested all routes, error handling, and validations with Postman   
+
+#### <ins>Todays Blockers</ins>:
+- Ran into an issue with double-encoded 'history' data (an attribute in my game thats a python list) in API responses
+  - This was due to not properly deserializing JSON from the database (I json.dumps when storing to db.. so I fixed the serialization process with json.loads)
+- Ran into another issue when database wasn't being found. I solved this by using relative pathing
+- Working on keeping a consistent return messages/errors with my API
+- Discovered con.row_factory = sqlite3.Row... which allows accessing the columns of a query by name instead of by position which is very helpful sometimes.
+
+ #### <ins>What I Plan To-Do Tomorrow</ins>:
+- Clean up my API code now that I know it works - it's very unpleasant to look at right now... so I'll seperate routes into game and player directories, implement helper methods where I can, etc.
+- Build out the UI of my online version of the game and "connect" it to my API. It'll still be console based UI but different to the "local" version of the game I built in the first few days.
+- I'm very happy I decided to implement this feature (online game) and to keep it lightweight!
+  - This is one of the first times I'm not using PostgreSQL or an ORM so I feel very "in control" of my code since there's minimal abstractions. 
