@@ -18,7 +18,9 @@ def setup_online_db():
         CREATE TABLE players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
+            password TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            score INTEGER
         )
     ''')
     cur.execute('''

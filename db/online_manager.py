@@ -2,6 +2,7 @@ import sqlite3
 import json
 import os.path
 from models.game import Game
+from flask import jsonify
 
 class OnlineManager():
   def __init__(self):
@@ -11,25 +12,37 @@ class OnlineManager():
     if not os.path.exists(directory):
       os.makedirs(directory)
 
-  def get_player_id(self, name: str, email: str) -> int:
+  def save_player_to_db(self, name, password, email):
     try:
       con = sqlite3.connect(self.path)
       cur = con.cursor()
-      cur.execute("SELECT id FROM players WHERE name = ? AND email = ?", (name, email))
-      player = cur.fetchone()
-      if player:
-        return player[0]
-      else:
-        cur.execute("INSERT INTO players (name, email) VALUES (?, ?)", (name, email))
-        con.commit()
-        player_id = cur.lastrowid
-        return player_id
-    except sqlite3.Error as err:
-      print(f"Database error: {err}")
+      cur.execute("INSERT into players (name, password, email) VALUES (?, ?, ?)",
+                  (name, password, email))
+      con.commit()
+      player_id = cur.lastrowid
+      return jsonify({'message': 'User created successfully', 'player_id': player_id}), 201
+    except sqlite3.IntegrityError as err:
+      return jsonify({'error': 'This username or email already exists'}), 409
+    except Exception as err:
+      return jsonify({'error': str(err)}), 500
     finally:
       con.close()
 
-  def get_game(self, game_id):
+  def get_player(self, email: str):
+    try:
+      con = sqlite3.connect(self.path)
+      con.row_factory = sqlite3.Row
+      cur = con.cursor()
+      cur.execute("SELECT * FROM players WHERE email = ?", (email,))
+      player = cur.fetchone()
+      if player:
+        return dict(player)
+    except sqlite3.Error as err:
+      return jsonify({'error': str(err)})
+    finally:
+      con.close()
+
+  def get_game(self, game_id: int) -> Game:
     try:
       con = sqlite3.connect(self.path)
       cur = con.cursor()
@@ -40,11 +53,11 @@ class OnlineManager():
       else:
         return None
     except sqlite3.Error as err:
-      print(f"Database error: {err}")
+      return jsonify({'error': str(err)})
     finally:
       con.close()
 
-  def update_game(self, game_id, game) -> None:
+  def update_game(self, game_id: int, game: Game) -> None:
     try:
       con = sqlite3.connect(self.path)
       cur = con.cursor()
@@ -53,11 +66,11 @@ class OnlineManager():
                         (game.attempts, game.win, game.game_over, history_json, game.hints, game_id))
       con.commit()
     except sqlite3.Error as err:
-      print(f"Database error: {err}")
+      return jsonify({'error': str(err)})
     finally:
       con.close()
 
-  def save_game_to_db(self, game: Game):
+  def save_game_to_db(self, game: Game) -> int:
     try:
       con = sqlite3.connect(self.path)
       cur = con.cursor()
@@ -68,6 +81,6 @@ class OnlineManager():
       game_id = cur.lastrowid
       return game_id
     except sqlite3.Error as err:
-      print(f"Database error: {err}")
+      return jsonify({'error': str(err)})
     finally:
       con.close()
