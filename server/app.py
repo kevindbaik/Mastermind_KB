@@ -79,6 +79,20 @@ def make_guess(game_id):
   }
   return jsonify(game_status)
 
+@app.route('/api/game/<int:game_id>/hint', methods=['POST'])
+def get_hint(game_id):
+  game = online_manager.get_game(game_id)
+  if not game:
+    return jsonify({'error': 'Game not found'}), 404
+  if game.game_over:
+    return jsonify({'message': 'Game has already ended'}), 200
+
+  try:
+    hint = game.give_hint()
+    online_manager.update_game(game_id, game)
+    return jsonify({'hint': hint, 'hints_left': game.hints})
+  except Exception as err:
+    return jsonify({'error': str(err)}), 400
 
 if __name__ == "__main__":
   app.run(debug=True)
