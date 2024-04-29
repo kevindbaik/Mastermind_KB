@@ -4,14 +4,19 @@ from typing import Dict, List, Tuple
 
 
 class Game:
-  def __init__(self, difficulty):
+  def __init__(self, difficulty, answer=None, attempts=10, history=[], hints=2, win=False, game_over=False,  player_id=None, id=None):
     self.difficulty = difficulty
-    self.answer = self._generate_answer()
-    self.attempts = 10
-    self.history = []
-    self.hints = 2
-    self.win = False
-    self.game_over = False
+    if answer is None:
+      self.answer = self._generate_answer()
+    else:
+      self.answer = answer
+    self.attempts = attempts
+    self.history = history
+    self.hints = hints
+    self.win = win
+    self.game_over = game_over
+    self.player_id = player_id
+    self.id = id
 
   # ------- public methods ----------
   def check_answer(self, user_answer: str) -> bool:
@@ -35,7 +40,7 @@ class Game:
     self.win = False
     self.game_over = True
 
-  def give_feedback(self, user_answer: str) -> Dict[str, int]:
+  def give_feedback(self, user_answer: str) -> Tuple[int, int]:
     correct_number = 0
     correct_location = 0
     ua_list = list(user_answer)
@@ -54,8 +59,7 @@ class Game:
           ga_list.remove(number)
           correct_number += 1
 
-    feedback = { "correct_location" : correct_location, "correct_number" : correct_number }
-    return feedback
+    return (correct_location, correct_number)
 
   def give_hint(self) -> str:
     if self.hints <= 0:
@@ -88,6 +92,12 @@ class Game:
         raise ValueError(f"each number can only be between 0 and {max_range}...")
     return True
 
+  def calculate_score(self) -> int:
+    score = 0
+    score += self.attempts * 100
+    score += self.difficulty * 200
+    score += self.hints * 200
+    return score
   # --------- getters/setters ---------
   @property
   def difficulty(self) -> int:

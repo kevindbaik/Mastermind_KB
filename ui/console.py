@@ -1,4 +1,5 @@
 from models.game import Game
+from typing import List
 
 class Console:
   # ------- read methods ----------
@@ -39,15 +40,26 @@ class Console:
 
   def display_difficulty(self, name: str):
     print("")
-    print("===============================")
+    print("=" * 50)
     print(f"hello {name.lower()}! choose a difficulty: ")
-    print("===============================")
+    print("=" * 50)
     print("")
     print("1 (Easy)")
     print("2 (Medium)")
     print("3 (Hard)")
     print("")
 
+  def display_score(self, name: str, score: int):
+    print("")
+    print("+" * 50)
+    print("=" * 50)
+    print("")
+    print(f"congratulations {name}, you won!")
+    print(f"total score: {score}")
+    print("")
+    print("=" * 50)
+    print("+" * 50)
+    print("")
   def display_welcome(self, message: str):
     lines = message.split('\n')
     max_length = max(len(line) for line in lines)
@@ -58,9 +70,9 @@ class Console:
 
   def display_menu(self):
     print("")
-    print("1 (Play Against Computer)")
-    print("2 (Read Rules)")
-    print("3 (Exit)")
+    print("1 (Play Local)")
+    print("2 (Play Online)")
+    print("3 (View High Scores)")
     print("")
 
   def display_game(self, game: Game):
@@ -71,11 +83,15 @@ class Console:
     print("")
     print("previous attempts:")
     history = game.get_history()
-    for i in range(len(history)):
-        guess = history[i]
-        feedback = game.give_feedback(guess)
-        if(feedback['correct_number'] == 0 and feedback['correct_location'] == 0):
-          print(f"guess #{i+1}: {guess} - all of your numbers are incorrect!")
-        else:
-          print(f"guess #{i+1}: {guess} - correct numbers: {feedback['correct_number']}, correct locations: {feedback['correct_location']}")
+    self._display_feedback(history, game)
     print("=" * 50)
+
+# ----- helper methods ------
+  def _display_feedback(self, history: List[str], game: Game) -> None:
+    for i in range(len(history)):
+      guess = history[i]
+      correct_location, correct_number = game.give_feedback(guess)
+      if(correct_location == 0 and correct_number == 0):
+        print(f"guess #{i+1}: {guess} - all of your numbers are incorrect!")
+      else:
+        print(f"guess #{i+1}: {guess} - correct locations: {correct_location}, correct numbers: {correct_number}")

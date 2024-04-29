@@ -1,17 +1,19 @@
 from models.game import Game
 from models.player import Player
 from .console import Console
+from db.local_manager import LocalManager
 
 class Controller:
   def __init__(self):
     self.console = Console()
+    self.local_manager = LocalManager()
     self.player = None
     self.game = None
 
   def run(self):
     self.console.display_welcome("Welcome to Mastermind!")
-    self.console.display_menu()
 
+    self.console.display_menu()
     while True:
       try:
         menu_choice = self.console.read_int("I choose: ", 3)
@@ -21,14 +23,14 @@ class Controller:
 
     match menu_choice:
       case 1: # play game
-        self.handle_case_one()
-      case 2: # read rules
+        self.play_game()
+      case 2: # high scores
         pass
       case 3: # exit game
-        pass
+        self.view_scores()
 
   # ------- helpers --------
-  def handle_case_one(self):
+  def play_game(self):
     self.console.display_header("challenge accepted!", "my names link... what's your name?")
     while True:
         try:
@@ -79,6 +81,14 @@ class Controller:
 
     ## game over
     if self.game.win:
-      self.console.display_message("congrats you beat me!")
+      self.player.score = self.game.calculate_score()
+      self.console.display_score(self.player.name, self.player.score)
+      self.manager.add_score(self.player.name, self.player.score, self.game.difficulty)
     else:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")
+
+  def view_scores(self):
+    high_scores = self.local_manager.get_all_high_scores()
+    print("Top 10 Scores:")
+    for score in high_scores:
+      print(f"Name: {score[0]}, Score: {score[1]}, Difficulty: {score[2]}")

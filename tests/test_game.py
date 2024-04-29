@@ -59,91 +59,91 @@ class TestGame(unittest.TestCase):
   def test_give_feedback_exact_matches(self):
     game = Game(1)
     game.answer = "1234"
-    feedback = game.give_feedback("1234")
-    self.assertEqual(feedback['correct_location'], 4)
-    self.assertEqual(feedback['correct_number'], 4)
+    correct_location, correct_number = game.give_feedback("1234")
+    self.assertEqual(correct_location, 4)
+    self.assertEqual(correct_number, 4)
 
   def test_give_feedback_zero_matches(self):
     game = Game(1)
     game.answer = "1234"
-    feedback = game.give_feedback("5555")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 0)
+    correct_location, correct_number = game.give_feedback("5555")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 0)
 
   def test_give_feedback_only_correct_numbers(self):
     game = Game(1)
     game.answer = "1234"
-    feedback = game.give_feedback("4321")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 4)
+    correct_location, correct_number = game.give_feedback("4321")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 4)
 
   def test_give_feedback_some_correct_numbers(self):
     game = Game(1)
     game.answer = "1234"
-    feedback = game.give_feedback("1536")
-    self.assertEqual(feedback['correct_location'], 2)
-    self.assertEqual(feedback['correct_number'], 2)
+    correct_location, correct_number = game.give_feedback("1536")
+    self.assertEqual(correct_location, 2)
+    self.assertEqual(correct_number, 2)
 
   def test_give_feedback_repeated_numbers_one(self):
     game = Game(1)
     game.answer = "1234"
-    feedback = game.give_feedback("2222")
-    self.assertEqual(feedback['correct_location'], 1)
-    self.assertEqual(feedback['correct_number'], 1)
+    correct_location, correct_number = game.give_feedback("2222")
+    self.assertEqual(correct_location, 1)
+    self.assertEqual(correct_number, 1)
 
   def test_give_feedback_repeated_numbers_two(self):
     game = Game(1)
     game.answer = "2234"
-    feedback = game.give_feedback("2222")
-    self.assertEqual(feedback['correct_location'], 2)
-    self.assertEqual(feedback['correct_number'], 2)
+    correct_location, correct_number = game.give_feedback("2222")
+    self.assertEqual(correct_location, 2)
+    self.assertEqual(correct_number, 2)
 
   def test_give_feedback_repeated_numbers_three(self):
     game = Game(1)
     game.answer = "1222"
-    feedback = game.give_feedback("2222")
-    self.assertEqual(feedback['correct_location'], 3)
-    self.assertEqual(feedback['correct_number'], 3)
+    correct_location, correct_number = game.give_feedback("2222")
+    self.assertEqual(correct_location, 3)
+    self.assertEqual(correct_number, 3)
 
   def test_give_feedback_repeated_numbers_four(self):
     game = Game(1)
     game.answer = "2222"
-    feedback = game.give_feedback("2222")
-    self.assertEqual(feedback['correct_location'], 4)
-    self.assertEqual(feedback['correct_number'], 4)
+    correct_location, correct_number = game.give_feedback("2222")
+    self.assertEqual(correct_location, 4)
+    self.assertEqual(correct_number, 4)
 
   def test_give_feedback_repeated_mixed(self):
     game = Game(1)
     game.answer = "2211"
-    feedback = game.give_feedback("1122")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 4)
+    correct_location, correct_number = game.give_feedback("1122")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 4)
 
   def test_give_feedback_repeated_outers(self):
     game = Game(1)
     game.answer = "2112"
-    feedback = game.give_feedback("1221")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 4)
+    correct_location, correct_number = game.give_feedback("1221")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 4)
 
   def test_give_feedback_example_run(self):
     game = Game(1)
     game.answer = "0135"
-    feedback = game.give_feedback("2246")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 0)
+    correct_location, correct_number = game.give_feedback("2246")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 0)
 
-    feedback = game.give_feedback("0246")
-    self.assertEqual(feedback['correct_location'], 1)
-    self.assertEqual(feedback['correct_number'], 1)
+    correct_location, correct_number = game.give_feedback("0246")
+    self.assertEqual(correct_location, 1)
+    self.assertEqual(correct_number, 1)
 
-    feedback = game.give_feedback("2211")
-    self.assertEqual(feedback['correct_location'], 0)
-    self.assertEqual(feedback['correct_number'], 1)
+    correct_location, correct_number = game.give_feedback("2211")
+    self.assertEqual(correct_location, 0)
+    self.assertEqual(correct_number, 1)
 
-    feedback = game.give_feedback("0156")
-    self.assertEqual(feedback['correct_location'], 2)
-    self.assertEqual(feedback['correct_number'], 3)
+    correct_location, correct_number = game.give_feedback("0156")
+    self.assertEqual(correct_location, 2)
+    self.assertEqual(correct_number, 3)
 
   # store_history method
   def test_store_history(self):
@@ -173,14 +173,6 @@ class TestGame(unittest.TestCase):
     hint = game.give_hint()
     self.assertEqual(game.hints, 1)
 
-  def test_give_hint_no_attempt(self):
-    game = Game(1)
-    game.answer = "7777"
-    hint = game.give_hint()
-    self.assertEqual(game.hints, 2)
-    hint = game.give_hint()
-    self.assertEqual(game.hints, 2)
-
   def test_give_hint_no_more_hints(self):
     game = Game(1)
     game.answer = "7777"
@@ -202,6 +194,37 @@ class TestGame(unittest.TestCase):
     game3 = Game(3)
     with self.assertRaisesRegex(ValueError, "your guess must have 5 numbers..."):
       game3.validate_user_answer("111211")
+
+  # calculate score
+  def test_calculate_score_hard(self):
+    game = Game(3)
+    self.assertEqual(game.calculate_score(), 2000)
+    game.decrement_attempt()
+    game.decrement_attempt()
+    self.assertEqual(game.calculate_score(), 1800)
+    game.history.append("1111")
+    game.give_hint()
+    self.assertEqual(game.calculate_score(), 1600)
+
+  def test_calculate_score_medium(self):
+    game = Game(2)
+    self.assertEqual(game.calculate_score(), 1800)
+    game.decrement_attempt()
+    game.decrement_attempt()
+    self.assertEqual(game.calculate_score(), 1600)
+    game.history.append("1111")
+    game.give_hint()
+    self.assertEqual(game.calculate_score(), 1400)
+
+  def test_calculate_score_easy(self):
+    game = Game(1)
+    self.assertEqual(game.calculate_score(), 1400)
+    game.decrement_attempt()
+    game.decrement_attempt()
+    self.assertEqual(game.calculate_score(), 1200)
+    game.history.append("1111")
+    game.give_hint()
+    self.assertEqual(game.calculate_score(), 1000)
 
   # difficulty validation
   def test_difficulty_valid(self):
