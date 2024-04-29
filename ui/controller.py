@@ -2,11 +2,13 @@ from models.game import Game
 from models.player import Player
 from .console import Console
 from db.local_manager import LocalManager
+from models.player_service import PlayerService
 
 class Controller:
   def __init__(self):
     self.console = Console()
     self.local_manager = LocalManager()
+    self.player_service = PlayerService()
     self.player = None
     self.game = None
 
@@ -23,14 +25,14 @@ class Controller:
 
     match menu_choice:
       case 1: # play game
-        self.play_game()
+        self.play_local_game()
       case 2: # high scores
-        pass
+        self.play_online_game()
       case 3: # exit game
         self.view_scores()
 
-  # ------- helpers --------
-  def play_game(self):
+  # ------- menu methods --------
+  def play_local_game(self):
     self.console.display_header("challenge accepted!", "my names link... what's your name?")
     while True:
         try:
@@ -39,7 +41,7 @@ class Controller:
             break
         except ValueError as err:
             self.console.display_error(err)
-    self.console.display_difficulty(name)
+    self.console.display_difficulty()
     while True:
         try:
             difficulty = self.console.read_int("My Choice: ", 3)
@@ -87,6 +89,70 @@ class Controller:
     else:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")
 
+  def play_online_game(self):
+    self.console.display_choices("Register", "Log In")
+    while True:
+      try:
+        login_choice = self.console.read_int("I choose: ", 2)
+        break
+      except ValueError as err:
+        self.console.display_error(err)
+    match login_choice:
+      case 1:
+        while True:
+          name = self.console.read_string("Enter Your Name: ")
+          email = self.console.read_string("Enter Your Email: ")
+          password = self.console.read_string("Enter Your Password: ")
+          response = self.player_service.create_player(name, email, password)
+          if 'success' in response:
+            player_info = response['success']
+            self.console.display_message(f"Welcome To Online Mastermind {name}!")
+            break
+          else:
+            self.console.display_error(response['error'])
+      case 2:
+        while True:
+          email = self.console.read_string("Enter Your Email: ")
+          password = self.console.read_string("Enter Your Password: ")
+          response = self.player_service.login_player(email, password)
+          if 'success' in response:
+            player_info = response['success']
+            self.console.display_message(f"Welcome Back {player_info['name']}!")
+            break
+          else:
+            self.console.display_error(response['error'])
+
+    self.console.display_choices("Play New Game", "Resume Ongoing Games", "View Past Game Results")
+    while True:
+      try:
+        game_choice = self.console.read_int("I choose: ", 2)
+        break
+      except ValueError as err:
+        self.console.display_error(err)
+    match game_choice:
+      case 1:
+        self.console.display_difficulty()
+        while True:
+          try:
+            difficulty = self.console.read_int("I choose: ", 3)
+            break
+          except ValueError as err:
+            self.console.display_error(err)
+        response = self.player_service.create_game(difficulty)
+        if 'success' in response:
+          game_data = response['success']
+          print('xxxxxxxx', game_data)
+          online_game = Game(difficulty=game_data['difficulty'], answer=game_data['answer'], attempts=game_data['attempts'], history=game_data['history'], hints=game_data['hints'], win=game_data['win'], game_over=game_data['game_over'], player_id=game_data['player_id'], id=game_data['game_id'], score=game_data['score'])
+          self.console.display_game(online_game)
+          while not online_game.game_over:
+            while True:
+              user_answer = self.console.read_string("My Guess: ")
+              if user_answer == "hint":
+                self.player_service.fetch_hint(online_game.id)
+
+        else:
+          self.console.display_error(response['error'])
+  # ------ helpers --------
   def view_scores(self):
     high_scores = self.local_manager.get_all_high_scores()
     print("Top 10 Scores:")

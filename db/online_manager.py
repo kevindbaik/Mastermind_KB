@@ -12,19 +12,65 @@ class OnlineManager():
     if not os.path.exists(directory):
       os.makedirs(directory)
 
+  def save_player_to_db(self, name, email, password):
+    try:
+      con = sqlite3.connect(self.path)
+      cur = con.cursor()
+      cur.execute("INSERT into players (name, email, password) VALUES (?, ?, ?)",
+                  (name, email.lower(), password))
+      con.commit()
+      player_id = cur.lastrowid
+      return {'player_id': player_id, 'name': name, 'email': email }, 201
+    except sqlite3.IntegrityError as err:
+      return {'error': 'This username or email already exists'}, 409
+    except Exception as err:
+      return {'error': str(err)}, 500
+    finally:
+      con.close()
+
   def get_player(self, email: str):
     try:
       con = sqlite3.connect(self.path)
       con.row_factory = sqlite3.Row
       cur = con.cursor()
-      cur.execute("SELECT * FROM players WHERE email = ?", (email,))
+      cur.execute("SELECT id, name, email, password FROM players WHERE email = ?", (email.lower(),))
       player = cur.fetchone()
       if player:
-        return dict(player)
+        player_dict = dict(player)
+        check_password = player_dict.pop('password')
+        return player_dict, check_password, 200
       else:
-        None
+        return {'error': 'User email does not exist in database'}, None, 404
     except sqlite3.Error as err:
-      return jsonify({'error': str(err)})
+      return {'error': str(err)}, 500
+    finally:
+      con.close()
+
+  def save_game_to_db(self, game: Game) -> int:
+    try:
+      con = sqlite3.connect(self.path)
+      cur = con.cursor()
+      history_json = json.dumps(game.history) #converts my list to a json string
+      cur.execute("INSERT INTO games (player_id, difficulty, answer, attempts, history, hints, win, game_over, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      (game.player_id, game.difficulty, game.answer, game.attempts, history_json, game.hints, game.win, game.game_over, game.score))
+      con.commit()
+
+      game_id = cur.lastrowid
+      game_dict = {
+      'game_id': game_id,
+      'player_id': game.player_id,
+      'difficulty': game.difficulty,
+      'answer': game.answer,
+      'attempts': game.attempts,
+      'history': game.history,
+      'hints': game.hints,
+      'win': game.win,
+      'game_over': game.game_over,
+      'score': game.score
+      }
+      return game_dict, 200
+    except sqlite3.Error as err:
+      return {'error': str(err)}, 500
     finally:
       con.close()
 
@@ -96,37 +142,6 @@ class OnlineManager():
       cur.execute("UPDATE games SET attempts = ?, win = ?, game_over = ?, history = ?, hints = ?, score = ? WHERE id = ?",
                         (game.attempts, game.win, game.game_over, history_json, game.hints, game.score, game_id))
       con.commit()
-    except sqlite3.Error as err:
-      return jsonify({'error': str(err)})
-    finally:
-      con.close()
-
-  def save_player_to_db(self, name, email, password):
-    try:
-      con = sqlite3.connect(self.path)
-      cur = con.cursor()
-      cur.execute("INSERT into players (name, email, password) VALUES (?, ?, ?)",
-                  (name, email, password))
-      con.commit()
-      player_id = cur.lastrowid
-      return jsonify({'message': 'User created successfully', 'player_id': player_id}), 201
-    except sqlite3.IntegrityError as err:
-      return jsonify({'error': 'This username or email already exists'}), 409
-    except Exception as err:
-      return jsonify({'error': str(err)}), 500
-    finally:
-      con.close()
-
-  def save_game_to_db(self, game: Game) -> int:
-    try:
-      con = sqlite3.connect(self.path)
-      cur = con.cursor()
-      history_json = json.dumps(game.history) #converts my list to a json string
-      cur.execute("INSERT INTO games (player_id, difficulty, answer, attempts, history, hints, win, game_over, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      (game.player_id, game.difficulty, game.answer, game.attempts, history_json, game.hints, game.win, game.game_over, game.score))
-      con.commit()
-      game_id = cur.lastrowid
-      return game_id
     except sqlite3.Error as err:
       return jsonify({'error': str(err)})
     finally:

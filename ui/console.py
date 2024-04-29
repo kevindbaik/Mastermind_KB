@@ -12,10 +12,10 @@ class Console:
       string = input(prompt)
       number = int(string)
       if number <= 0 or number > max:
-        raise ValueError(f"that's not a valid number...")
+        raise ValueError(f"Please enter valid number...")
       return number
     except:
-      raise ValueError(f"that's not a valid number...")
+      raise ValueError(f"That's not a valid number...")
 
   # ------- display methods ----------
   def display_header(self, *strings: str):
@@ -36,12 +36,12 @@ class Console:
     print(f"hint: {message}")
 
   def display_error(self, message: str):
-    print(f"input error: {message}")
+    print(f"Error: {message}")
 
-  def display_difficulty(self, name: str):
+  def display_difficulty(self):
     print("")
     print("=" * 50)
-    print(f"hello {name.lower()}! choose a difficulty: ")
+    print(f"Choose your difficulty: ")
     print("=" * 50)
     print("")
     print("1 (Easy)")
@@ -86,6 +86,12 @@ class Console:
     self._display_feedback(history, game)
     print("=" * 50)
 
+  def display_choices(self, *strings):
+    print("=" * 50)
+    print("Please select an option:")
+    for i, option in enumerate(strings, start=1):
+      print(f"{i} ({option})")
+    print("")
 # ----- helper methods ------
   def _display_feedback(self, history: List[str], game: Game) -> None:
     for i in range(len(history)):
