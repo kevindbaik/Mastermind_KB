@@ -141,15 +141,36 @@ class Controller:
         response = self.player_service.create_game(difficulty)
         if 'success' in response:
           game_data = response['success']
-          print('xxxxxxxx', game_data)
           online_game = Game(difficulty=game_data['difficulty'], answer=game_data['answer'], attempts=game_data['attempts'], history=game_data['history'], hints=game_data['hints'], win=game_data['win'], game_over=game_data['game_over'], player_id=game_data['player_id'], id=game_data['game_id'], score=game_data['score'])
           self.console.display_game(online_game)
           while not online_game.game_over:
             while True:
               user_answer = self.console.read_string("My Guess: ")
               if user_answer == "hint":
-                self.player_service.fetch_hint(online_game.id)
-
+                response = self.player_service.fetch_hint(online_game.id)
+                if 'success' in response: #{'success': { 'hint': xx, 'hints_left' : xx}}
+                  data = response['success']
+                  online_game.attempts -= 1
+                  self.console.display_message(data['hint'])
+                else:
+                  self.console.display_error(response['error'])
+              else:
+                response = self.player_service.fetch_make_guess(online_game.id, user_answer)
+                if 'success' in response: #{'success': {}}
+                  data = response['success']
+                  online_game.attempts = data['attempts']
+                  online_game.history = data['history']
+                  self.console.display_game(online_game)
+                elif 'game_over' in response:
+                  data = response['game_over']
+                  if data['result'] is True:
+                    self.console.display_score(player_info['name'], data['score'])
+                    break
+                  else:
+                    self.console.display_message(f"nice try {player_info['name']}... my code was: {online_game.answer}")
+                    break
+                else:
+                  self.console.display_error(response['error'])
         else:
           self.console.display_error(response['error'])
   # ------ helpers --------

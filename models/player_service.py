@@ -36,7 +36,15 @@ class PlayerService:
     return response.json()
 
   def fetch_hint(self, game_id):
-    url=f'http://localhost:5000/api/{game_id}/hint'
+    url=f"http://localhost:5000/api/game/{game_id}/hint"
+    response = self.session.post(url)
+    return response.json()
+
+  def fetch_make_guess(self, game_id, user_answer):
+    url=f"http://localhost:5000/api/game/{game_id}/guess"
     headers = {'Content-Type': 'application/json'}
-    response = self.session.post(url, headers=headers)
+    data = {
+      "guess": user_answer
+    }
+    response = self.session.post(url, json=data, headers=headers)
     return response.json()

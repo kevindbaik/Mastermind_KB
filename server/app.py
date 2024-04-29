@@ -77,7 +77,7 @@ def logout_player():
   if 'player_id' in session:
       session.pop('player_id', None)
       session.pop('email', None)
-      return jsonify({'message' : 'You have been logged out'}), 200
+      return jsonify({'success' : 'You have been logged out'}), 200
   else:
     return jsonify({'error': 'No user is currently logged in'}), 403
 
@@ -119,7 +119,7 @@ def get_status(game_id):
     'win': game.win,
     'game_over': game.game_over,
     'history': game.history}
-  return jsonify(game_status)
+  return jsonify({'success': game_status}), 201
 
 @app.route('/api/game/<int:game_id>/guess', methods=['POST'])
 def make_guess(game_id):
@@ -133,7 +133,7 @@ def make_guess(game_id):
   if not game:
     return jsonify({'error': 'Game not found'}), 404
   if game.game_over:
-    return jsonify({'message': 'Game has already ended'}), 200
+    return jsonify({'error': 'Game has already ended'}), 200
   if game.player_id != session['player_id']:
     return jsonify({'error': 'Game does not belong to user'}),403
 
@@ -148,36 +148,26 @@ def make_guess(game_id):
     online_manager.save_score_to_game(game.id, score)
     online_manager.update_game(game_id, game)
     online_manager.save_score_to_leaderboard(player_name, game.score, game.difficulty)
-    return jsonify({'message' : 'Congratulations.. You Won!'})
+    return jsonify({'game_over' : {'result': game.win, 'score': game.score}}), 201
   else:
     game.decrement_attempt()
     if game.attempts == 0:
       game.end_game_lose()
+      online_manager.update_game(game_id, game)
+      return jsonify({'game_over': {'result': game.win, 'score': 0 }}), 201
     game.store_history(guess)
     feedback = game.give_feedback(guess)
     feedback_dict = { 'correct_locations': feedback[0], 'correct_numbers': feedback[1] }
 
-    historical_feedback = []
-    for i, guess in enumerate(game.get_history()):
-      feedback = game.give_feedback(guess)
-      feedback_entry = {
-          'guess_number': i + 1,
-          'guess': guess,
-          'feedback': {
-              'correct_location': feedback[0],
-              'correct_number': feedback[1]
-          }
-      }
-      historical_feedback.append(feedback_entry)
   online_manager.update_game(game_id, game)
   game_status = {
       'difficulty': game.difficulty,
       'guess': guess,
-      'attempts_remaining': game.attempts,
+      'attempts': game.attempts,
       'feedback': feedback_dict,
-      'previous_attempts': historical_feedback
+      'history': game.get_history()
   }
-  return jsonify(game_status)
+  return jsonify({'success': game_status})
 
 @app.route('/api/game/<int:game_id>/hint', methods=['POST'])
 def get_hint(game_id):
@@ -188,18 +178,17 @@ def get_hint(game_id):
     return jsonify({'error': 'Game has already ended'}), 200
   if game.player_id != session['player_id']:
     return jsonify({'error': 'Game does not belong to user'}), 403
-
   try:
     hint = game.give_hint()
     online_manager.update_game(game_id, game)
-    return jsonify({'hint': hint, 'hints_left': game.hints})
+    return jsonify({'success': {'hint': hint, 'hints_left': game.hints}})
   except Exception as err:
     return jsonify({'error': str(err)}), 400
 
 @app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():
   leaderboard = online_manager.get_leaderboard()
-  return jsonify({'leaderboard': leaderboard})
+  return jsonify({'success': leaderboard}), 200
 
 if __name__ == "__main__":
   app.run(debug=True)
