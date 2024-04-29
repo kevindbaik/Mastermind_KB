@@ -28,15 +28,16 @@ class Console:
     print("")
 
   def display_message(self, message: str):
-    print("")
     print(message)
-    print("")
+
 
   def display_hint(self, message: str):
     print(f"hint: {message}")
 
   def display_error(self, message: str):
+    print("-" * 50)
     print(f"Error: {message}")
+    print("-" * 50)
 
   def display_difficulty(self):
     print("")
@@ -50,16 +51,9 @@ class Console:
     print("")
 
   def display_score(self, name: str, score: int):
-    print("")
-    print("+" * 50)
-    print("=" * 50)
-    print("")
     print(f"congratulations {name}, you won!")
     print(f"total score: {score}")
-    print("")
-    print("=" * 50)
-    print("+" * 50)
-    print("")
+
   def display_welcome(self, message: str):
     lines = message.split('\n')
     max_length = max(len(line) for line in lines)
@@ -89,8 +83,9 @@ class Console:
   def display_choices(self, *strings):
     print("=" * 50)
     print("Please select an option:")
-    for i, option in enumerate(strings, start=1):
-      print(f"{i} ({option})")
+    print("")
+    for i, option in enumerate(strings):
+      print(f"{i + 1} ({option})")
     print("")
 # ----- helper methods ------
   def _display_feedback(self, history: List[str], game: Game) -> None:
