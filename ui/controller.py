@@ -81,9 +81,9 @@ class Controller:
 
     ## game over
     if self.game.win:
-      self.player.score = self.game.calculate_score()
-      self.console.display_score(self.player.name, self.player.score)
-      self.manager.add_score(self.player.name, self.player.score, self.game.difficulty)
+      score = self.game.calculate_score()
+      self.console.display_score(self.player.name, self.game.score)
+      self.local_manager.add_score(self.player.name, self.game.score, self.game.difficulty)
     else:
       self.console.display_message(f"nice try {self.player.name}... my code was: {self.game.answer}")
 
