@@ -13,16 +13,15 @@ def setup_online_db():
 
     cur.execute("DROP TABLE IF EXISTS players")
     cur.execute("DROP TABLE IF EXISTS games")
+    cur.execute("DROP TABLE IF EXISTS online_leaderboard")
 
     cur.execute('''
         CREATE TABLE players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            password TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
-            score INTEGER
-        )
-    ''')
+            password TEXT NOT NULL
+        )''')
     cur.execute('''
         CREATE TABLE games (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,9 +33,15 @@ def setup_online_db():
             hints INTEGER,
             win BOOLEAN,
             game_over BOOLEAN,
+            score INTEGER,
             FOREIGN KEY (player_id) REFERENCES players (id)
-        )
-    ''')
+        )''')
+    cur.execute('''CREATE TABLE online_leaderboard (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            score integer NOT NULL,
+            difficulty integer NOT NULL
+            )''')
 
     con.commit()
     con.close()

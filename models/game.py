@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 
 class Game:
-  def __init__(self, difficulty, answer=None, attempts=10, history=[], hints=2, win=False, game_over=False,  player_id=None, id=None):
+  def __init__(self, difficulty, answer=None, attempts=10, history=[], hints=2, win=False, game_over=False,  player_id=None, id=None, score=0):
     self.difficulty = difficulty
     if answer is None:
       self.answer = self._generate_answer()
@@ -17,6 +17,7 @@ class Game:
     self.game_over = game_over
     self.player_id = player_id
     self.id = id
+    self.score = score
 
   # ------- public methods ----------
   def check_answer(self, user_answer: str) -> bool:
@@ -92,12 +93,14 @@ class Game:
         raise ValueError(f"each number can only be between 0 and {max_range}...")
     return True
 
-  def calculate_score(self) -> int:
+  def calculate_score(self):
     score = 0
     score += self.attempts * 100
     score += self.difficulty * 200
     score += self.hints * 200
+    self.score = score
     return score
+
   # --------- getters/setters ---------
   @property
   def difficulty(self) -> int:
