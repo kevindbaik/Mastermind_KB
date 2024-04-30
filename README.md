@@ -109,7 +109,10 @@ python main.py
   - Difficulty option that effects game code.
   - Use two available hints in each game. 
   - Total score calculation on victory that stores into leaderboard.
-  - Create an account with a name, email, and password for online mode.
+  - Create an account with a name, email, and password or login for online mode.
+    - Demo User credentials:
+      - Email: demouser@demo.com
+      - Password: demouser
     - Once logged in, session is saved and user will not have to re login. 
   - Online game progress is always saved.
   - Jump back in to any of your online games in session and even play multiple games.
