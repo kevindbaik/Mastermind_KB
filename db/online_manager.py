@@ -126,7 +126,7 @@ class OnlineManager():
       for row in rows:
         row_dict = {'name': row[0], 'score':row[1], 'difficulty': row[2]}
         leaderboard.append(row_dict)
-      return leaderboard
+      return leaderboard, 200
     except sqlite3.Error as err:
       return jsonify({'error': str(err)})
     finally:

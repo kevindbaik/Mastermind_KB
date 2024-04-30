@@ -59,7 +59,6 @@ class Game:
         if number in ga_list:
           ga_list.remove(number)
           correct_number += 1
-
     return (correct_location, correct_number)
 
   def give_hint(self) -> str:
@@ -85,12 +84,12 @@ class Game:
     max_range = settings[self.difficulty][1]
 
     if len(user_answer) != total_nums:
-      raise ValueError(f"your guess must have {total_nums} numbers...")
+      raise ValueError(f"Your guess must have {total_nums} numbers")
     for number in user_answer:
       if not number.isdigit():
-        raise ValueError("your guess can only contain numbers...")
+        raise ValueError("Your guess can only contain numbers")
       elif int(number) > max_range:
-        raise ValueError(f"each number can only be between 0 and {max_range}...")
+        raise ValueError(f"Each number can only be between 0 and {max_range}")
     return True
 
   def calculate_score(self):
@@ -109,9 +108,9 @@ class Game:
   @difficulty.setter
   def difficulty(self, user_input: int):
     if not isinstance(user_input, int):
-      raise ValueError("your choice must be a number...")
+      raise ValueError("Your choice must be a number")
     if user_input not in [1, 2, 3]:
-      raise ValueError("your choice must be either 1, 2, or 3...")
+      raise ValueError("Your choice must be either 1, 2, or 3")
     self._difficulty = user_input
 
   # ------- private methods ----------
@@ -124,7 +123,7 @@ class Game:
       answer_string = ''.join(list_nums)
       return answer_string
     else:
-      raise ConnectionError("failed to retrieve data...")
+      raise ConnectionError("Failed to retrieve data")
 
   def _generate_difficulty_settings(self) -> Tuple[int, int]:
     match self.difficulty:
@@ -136,12 +135,12 @@ class Game:
         return (5, 9)
 
   def _display_hint_message_correct(self, last_answer: str, random_index: int) -> str:
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is in the correct position..."
+    return f"The number {last_answer[random_index]} in position {random_index + 1} is in the correct position."
   def _display_hint_message_partial(self, last_answer: str, random_index: int) -> str:
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code..."
+    return f"The number {last_answer[random_index]} in position {random_index + 1} is not in the correct position, but is present in the secret code."
   def _display_hint_incorrect(self, last_answer: str, random_index: int) -> str:
-    return f"the number {last_answer[random_index]} in position {random_index + 1} is not in the secret code..."
+    return f"The number {last_answer[random_index]} in position {random_index + 1} is not in the secret code."
   def _display_hint_no_hint(self):
-    return "you have no more hints..."
+    return "You have no more hints"
   def _display_hint_no_attempt(self):
-    return "you must take a guess first..."
+    return "You must take a guess first"
