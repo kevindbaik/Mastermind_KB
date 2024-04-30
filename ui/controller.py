@@ -104,7 +104,7 @@ class Controller:
           email = self.console.read_string("Enter Your Email: ")
           password = self.console.read_string("Enter Your Password: ")
           response = self.player_service.create_player(name, email, password)
-          if 'success' in response:
+          if 'success' in response: #{'success': {'player_id':int,  'name': str, 'email': str}}
             player_info = response['success']
             self.console.display_message(f"Welcome To Online Mastermind {name}!")
             break
@@ -135,9 +135,11 @@ class Controller:
         self.console.display_error(err)
     match game_choice:
       case 1:
-        self.start_online_game(player_info)
+        self.start_new_game(player_info)
+      case 2:
+        self.continue_games(player_info)
 
-  def start_online_game(self, player_info):
+  def start_new_game(self, player_info):
     self.console.display_difficulty()
     while True:
       try:
@@ -154,8 +156,22 @@ class Controller:
     else:
       self.console.display_error(response['error'])
 
-    # game is over
-    self.display_game_over(player_info)
+  def continue_games(self, player_info):
+    response = self.player_service.fetch_user_active_games(player_info['id'])
+    if 'success' in response: #{'success' : [ dict(game), dict(game), ...]
+      data = response['success']
+      self.console.display_resume_games(data)
+      while True:
+        try:
+          game_choice = self.console.read_int("I choose: ", len(data))
+          break
+        except ValueError as err:
+          self.console.display_error(err)
+      game = data[game_choice - 1]
+      online_game = Game(difficulty=game['difficulty'],answer=game['answer'],attempts=game['attempts'], history=game['history'], hints=game['hints'],player_id=game['player_id'],id=game['id'])
+      self.play_online_game(online_game, player_info)
+    else:
+      self.console.display_error(response['error'])
 
   def play_online_game(self, online_game, player_info):
     self.console.display_game(online_game)
@@ -183,6 +199,8 @@ class Controller:
               break
           else:
             self.console.display_error(response['error'])
+    # game is over
+    self.display_game_over(player_info)
 
   def display_game_over(self, player_info):
     self.console.display_choices("Play again?", "Return to Menu", "Exit Game")
@@ -205,7 +223,7 @@ class Controller:
     if 'success' in response: #{'success': { 'hint': str, 'hints_left' : str}}
       data = response['success']
       online_game.attempts -= 1
-      self.console.display_message(data['hint'])
+      self.console.display_hint(data['hint'])
     else: #{'error': str}
       self.console.display_error(response['error'])
 

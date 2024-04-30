@@ -20,7 +20,7 @@ class OnlineManager():
                   (name, email.lower(), password))
       con.commit()
       player_id = cur.lastrowid
-      return {'player_id': player_id, 'name': name, 'email': email }, 201
+      return {'id': player_id, 'name': name, 'email': email }, 201
     except sqlite3.IntegrityError as err:
       return {'error': 'This username or email already exists'}, 409
     except Exception as err:
@@ -86,8 +86,6 @@ class OnlineManager():
           game_dict = dict(game)
           if game_dict['history']:
               game_dict['history'] = json.loads(game_dict['history']) #converts json string back to py list
-          if not game_over:
-            del game_dict['answer']
           games_list.append(game_dict)
       return games_list
     except sqlite3.Error as err:

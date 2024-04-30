@@ -28,6 +28,7 @@ class Console:
     print("")
 
   def display_message(self, message: str):
+    print("")
     print(message)
 
 
@@ -86,6 +87,14 @@ class Console:
     print("")
     for i, option in enumerate(strings):
       print(f"{i + 1} ({option})")
+    print("")
+
+  def display_resume_games(self, games):
+    print("=" * 50)
+    print("Please choose a game to continue:")
+    print("")
+    for i, game in enumerate(games):
+      print(f"{i + 1} (Game ID: {game['id']}, Difficulty: {game['difficulty']}, Attempts: {game['attempts']}, Hints: {game['hints']})")
     print("")
 # ----- helper methods ------
   def _display_feedback(self, history: List[str], game: Game) -> None:
