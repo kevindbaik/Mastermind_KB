@@ -1,4 +1,4 @@
-# API Routes
+# API Documentation
 
 ## Player
 ### Sign Up Player
