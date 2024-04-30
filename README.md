@@ -14,7 +14,7 @@
 ## 🧠 Introduction 🧠
 Mastermind is a console-based puzzle game where players decipher a secret code. Play it offline for a straightforward challenge or connect online to access extra features like saving your progress. 
 <br><br>
-Whether you're looking for a quick mental workout or a fun way to pass the time... Mastermind provides a unique to test your deductive skills! 
+Whether you're looking for a quick mental workout or a fun way to pass the time... Mastermind provides a unique way to test your deductive skills! 
 
 ## 💻 Setup and Run 💻
 
