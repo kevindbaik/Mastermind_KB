@@ -1,4 +1,5 @@
 # Welcome to Mastermind! 
+<div align="center"> <img src="readme/Mastermind_KB_Logo.png" alt="logo"> </div>
 
 ## 📚 Table of Contents 📚
   - WIP
