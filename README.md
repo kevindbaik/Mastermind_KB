@@ -89,7 +89,22 @@ python main.py
 
 
 ## 🏁 Features 🏁
-  - WIP
+  - Play the game with no internet connection in local mode.
+  - Difficulty option that effects game code.
+  - Use two available hints in each game. 
+  - Total score calculation on victory that stores into leaderboard.
+  - Create an account with a name, email, and password for online mode.
+    - Once logged in, session is saved and user will not have to re login. 
+  - Online game progress is always saved, even when exiting.
+  - Jump back in to any of your online games in session and even play multiple games.
+  - View results of past online games.
+  - View both local and online leaderboards.
+    
+## 🔜 Future Implementations 🔜
+  - View leaderboard rankings by seperate difficulties.
+  - Play local multiplayer.
+  - Cancel an online game in session.
+  - Game timer that tracks each game completed. 
 
 ## ⚙️ API Reference ⚙️
 **_Click [here](/readme/api-reference.md) for more information about the API routes and database schema!_**
