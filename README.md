@@ -55,7 +55,8 @@ To start the game, from the root directory of Mastermind run:
 ```bash
 python main.py
 ```
-
+## ⚙️ API Reference ⚙️
+**_Click [here](/readme/api-reference.md) for more information about the API routes and database schema!_**
 
 ## 🏁 Features 🏁
   - WIP
