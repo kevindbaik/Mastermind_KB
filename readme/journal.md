@@ -107,7 +107,7 @@
   - Decide on db and create tables, seeders + also decide if I want to use an ORM
   - Finish building API endpoints that allow user to interact with game. Test and handle validations + responses appropriately.
 
-### ⛅ Day 5: April 26, 2024 ⛅
+### ⛅ Day 5: April 27, 2024 ⛅
 #### <ins>What I Accomplished Today</ins>:
 - Finished building API including routes for player signup/login/logout, playing/seeing their games, making guesses and hints
 - Also built a manager class thats acts as a middleman between the API and database...
@@ -128,7 +128,7 @@
 - I'm very happy I decided to implement this feature (online game) and to keep it lightweight!
   - This is one of the first times I'm not using PostgreSQL or an ORM so I feel very "in control" of my code since there's minimal abstractions. 
 
-### ⛅ Day 6: April 26, 2024 ⛅
+### ⛅ Day 6: April 28, 2024 ⛅
 #### <ins>What I Accomplished Today</ins>:
 - Wrote additional routes to account for leaderboard scores, fixed JSON outputs to ensure consistency, tightened up validations for some routes requiring inputs, and improved SQL queries
 - Started building the console ui for the online version, currently the user can sign up or log in, and start a game. 
@@ -138,9 +138,29 @@
 - Managing sessions across HTTP requests from a console application to Flask server. I soon discovered requests can do this though.
 - Trying to figure out if there is an efficient way to keep track of the game locally "what the user sees on the console" while updating the state of the game online and in the db. 
 - Lots of random bugs today including seeing JSONDecodeError frequently
-  - I'm going to sleep not knowing what the issue is. Making requests through a console application with python requests is more difficult than I thought.
 
  #### <ins>What I Plan To-Do Tomorrow</ins>:
 - I will finish the ui for online game and test thoroughly. 
 - Write documentation for API and finish readme
+
+### ⛅ Day 7: April 29, 2024 ⛅
+#### <ins>What I Accomplished Today</ins>:
+- Finished implementing the final feature before project submission: Online play.
+  - Wrote more fetch methods (helpers) to make calls from console UI, reorganized a lot of code in my controller class to make it easier to read/flow (using more recursion), changed some method returns to make all outputs more consistent.
+  - Enhanced user experience by allowing options to return to main menu, go back, or exit the game.
+  - Seeded some more data, specifically for user
+- Improved leaderboard/score feature by allowing user to see both local and online top 10.
+- Tested, tested, tested to ensure no bugs.
+- Wrote installation/local setup guide and finished documentation for API and database schema.
+
+#### <ins>Todays Blockers</ins>:
+- Biggest challenge today was figuring out how to track the players session, specifically through the console UI.
+  - For example when interacting through the console, if a user logs in and returns to menu, the session was lost and they would have to re log in.
+  - I decided that whenever I give the option to redirect back to different menus (recursion methods), I pass in an argument of player_session that carries from method to method. Now once a player logs in, until they exit the application they don't have to relog in.
+- For some reason, Game class history was not being cleared even if I instantiated a new game. It was because I was appending strings and never emptying the list, so my solution was on instantiation, pass in a history attribute equal to an empty list.
+- Deciding on a good, presentable format for API docs and DB schema.
+- I learned so much from this project, so regardless of the outcome the time spent was 100000% worth it.
+
+ #### <ins>What I Plan To-Do Tomorrow</ins>:
+- Finish readme and turn in by EOD!
 
