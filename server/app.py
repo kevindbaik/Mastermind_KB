@@ -17,68 +17,69 @@ def create_player():
   name = str(data.get('name', '')).strip()
   password = str(data.get('password', '')).strip()
   email = str(data.get('email', '')).strip()
-
   if 'player_id' in session:
-      return jsonify({'message': 'You are already logged in.'}), 200
+      return jsonify({'error': 'You are already logged in.'}), 200
   if not name or not password or not email:
     return jsonify({'error': 'Missing username, password, or email'}), 400
   try:
-    player = Player(name=name, email=email, password=password)
+    Player(name=name, email=email, password=password)
   except ValueError as err:
     return jsonify({'error': str(err)}), 400
 
-  email = email.lower()
   response, status_code = online_manager.save_player_to_db(name, email, password)
-  response = response.get_json()
-  if status_code == 201:
-    session['player_id'] = response['player_id']
-    session['email'] = email
-    return jsonify({'message': 'User created successfully'}), 201
-  else:
-    return response, status_code
+
+  if status_code != 201:
+    return jsonify(response), status_code
+
+  session['player_id'] = response['id']
+  session['email'] = email.lower()
+  return jsonify({'success': response }), 200
 
 @app.route('/api/player/login', methods=['POST'])
 def login_player():
   data = request.get_json()
   email = str(data.get('email', '')).strip()
   password = str(data.get('password', '')).strip()
-
   if not email or not password:
     return jsonify({'error': 'Missing email or password'}), 400
   if 'player_id' in session:
-    return jsonify({'message': 'You are already logged in.'}), 200
+    return jsonify({'error': 'You are already logged in'}), 200
   if not isinstance(email, str) or "@" not in email:
-    return jsonify({'error': 'Invalid email address'})
-  player = online_manager.get_player(email)
-  if player is None:
-      return jsonify({'error': 'User email does not exist in database'}), 404
-  elif password != player['password']:
-    return jsonify({'error': 'User password is incorrect'})
-  else:
-      session['player_id'] = player['id']
-      session['email'] = email.lower()
-      return jsonify({'message': 'Login successful'}), 200
+    return jsonify({'error': 'Invalid email address'}), 400
+
+  response, check_password, status_code = online_manager.get_player(email)
+
+  if status_code != 200:
+    return jsonify(response), status_code
+  if password != check_password:
+    return jsonify({'error': 'User password is incorrect'}), 401
+
+  session['player_id'] = response['id']
+  session['email'] = email.lower()
+  return jsonify({'success': response}), 200
 
 @app.route('/api/player/<int:player_id>/games/ongoing', methods=['GET'])
 def get_player_games_active(player_id):
-  games = online_manager.get_player_games(player_id, game_over=False)
-  if isinstance(games, dict) and 'error' in games:
-    return jsonify(games), 500
-  return jsonify({'games': games}), 200
+  (response, status_code) = online_manager.get_player_games(player_id, game_over=False)
+  if status_code != 200:
+    return jsonify(response), status_code
+  else:
+    return jsonify({'success': response}), 200
 
 @app.route('/api/player/<int:player_id>/games/ended', methods=['GET'])
 def get_player_games_ended(player_id):
-  games = online_manager.get_player_games(player_id, game_over=True)
-  if isinstance(games, dict) and 'error' in games:
-    return jsonify(games), 500
-  return jsonify({'games': games}), 200
+  response, status_code = online_manager.get_player_games(player_id, game_over=True)
+  if status_code != 200:
+    return jsonify(response), status_code
+  else:
+    return jsonify({'success': response}), 200
 
 @app.route('/api/player/logout', methods=['GET'])
 def logout_player():
   if 'player_id' in session:
       session.pop('player_id', None)
       session.pop('email', None)
-      return jsonify({'message' : 'You have been logged out'}), 200
+      return jsonify({'success' : 'You have been logged out'}), 200
   else:
     return jsonify({'error': 'No user is currently logged in'}), 403
 
@@ -95,8 +96,10 @@ def start_game():
     except ValueError as err:
       return jsonify({'error': str(err)}), 400
 
-    game_id = online_manager.save_game_to_db(game)
-    return jsonify({ 'message': 'Game started successfully', 'game_id': game_id, 'player_id': session['player_id']}), 201
+    response, status_code = online_manager.save_game_to_db(game)
+    if status_code != 200:
+      return jsonify(response), status_code
+    return jsonify({'success': response}), 201
 
 @app.route('/api/game/<int:game_id>', methods=['GET'])
 def get_status(game_id):
@@ -118,7 +121,7 @@ def get_status(game_id):
     'win': game.win,
     'game_over': game.game_over,
     'history': game.history}
-  return jsonify(game_status)
+  return jsonify({'success': game_status}), 201
 
 @app.route('/api/game/<int:game_id>/guess', methods=['POST'])
 def make_guess(game_id):
@@ -132,7 +135,7 @@ def make_guess(game_id):
   if not game:
     return jsonify({'error': 'Game not found'}), 404
   if game.game_over:
-    return jsonify({'message': 'Game has already ended'}), 200
+    return jsonify({'error': 'Game has already ended'}), 200
   if game.player_id != session['player_id']:
     return jsonify({'error': 'Game does not belong to user'}),403
 
@@ -147,36 +150,26 @@ def make_guess(game_id):
     online_manager.save_score_to_game(game.id, score)
     online_manager.update_game(game_id, game)
     online_manager.save_score_to_leaderboard(player_name, game.score, game.difficulty)
-    return jsonify({'message' : 'Congratulations.. You Won!'})
+    return jsonify({'game_over' : {'result': game.win, 'score': game.score}}), 201
   else:
     game.decrement_attempt()
     if game.attempts == 0:
       game.end_game_lose()
+      online_manager.update_game(game_id, game)
+      return jsonify({'game_over': {'result': game.win, 'score': 0 }}), 201
     game.store_history(guess)
     feedback = game.give_feedback(guess)
     feedback_dict = { 'correct_locations': feedback[0], 'correct_numbers': feedback[1] }
 
-    historical_feedback = []
-    for i, guess in enumerate(game.get_history()):
-      feedback = game.give_feedback(guess)
-      feedback_entry = {
-          'guess_number': i + 1,
-          'guess': guess,
-          'feedback': {
-              'correct_location': feedback[0],
-              'correct_number': feedback[1]
-          }
-      }
-      historical_feedback.append(feedback_entry)
   online_manager.update_game(game_id, game)
   game_status = {
       'difficulty': game.difficulty,
       'guess': guess,
-      'attempts_remaining': game.attempts,
+      'attempts': game.attempts,
       'feedback': feedback_dict,
-      'previous_attempts': historical_feedback
+      'history': game.get_history()
   }
-  return jsonify(game_status)
+  return jsonify({'success': game_status})
 
 @app.route('/api/game/<int:game_id>/hint', methods=['POST'])
 def get_hint(game_id):
@@ -184,21 +177,20 @@ def get_hint(game_id):
   if game is None:
     return jsonify({'error': 'Game not found'}), 404
   if game.game_over:
-    return jsonify({'message': 'Game has already ended'}), 200
+    return jsonify({'error': 'Game has already ended'}), 200
   if game.player_id != session['player_id']:
-    return jsonify({'error': 'Game does not belong to user'}),403
-
+    return jsonify({'error': 'Game does not belong to user'}), 403
   try:
     hint = game.give_hint()
     online_manager.update_game(game_id, game)
-    return jsonify({'hint': hint, 'hints_left': game.hints})
+    return jsonify({'success': {'hint': hint, 'hints_left': game.hints}})
   except Exception as err:
     return jsonify({'error': str(err)}), 400
 
 @app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():
   leaderboard = online_manager.get_leaderboard()
-  return jsonify({'leaderboard': leaderboard})
+  return jsonify({'success': leaderboard}), 200
 
 if __name__ == "__main__":
   app.run(debug=True)

@@ -12,10 +12,10 @@ class Console:
       string = input(prompt)
       number = int(string)
       if number <= 0 or number > max:
-        raise ValueError(f"that's not a valid number...")
+        raise ValueError(f"Please enter valid number...")
       return number
     except:
-      raise ValueError(f"that's not a valid number...")
+      raise ValueError(f"That's not a valid number...")
 
   # ------- display methods ----------
   def display_header(self, *strings: str):
@@ -30,18 +30,20 @@ class Console:
   def display_message(self, message: str):
     print("")
     print(message)
-    print("")
+
 
   def display_hint(self, message: str):
     print(f"hint: {message}")
 
   def display_error(self, message: str):
-    print(f"input error: {message}")
+    print("-" * 50)
+    print(f"Error: {message}")
+    print("-" * 50)
 
-  def display_difficulty(self, name: str):
+  def display_difficulty(self):
     print("")
     print("=" * 50)
-    print(f"hello {name.lower()}! choose a difficulty: ")
+    print(f"Choose your difficulty: ")
     print("=" * 50)
     print("")
     print("1 (Easy)")
@@ -50,16 +52,9 @@ class Console:
     print("")
 
   def display_score(self, name: str, score: int):
-    print("")
-    print("+" * 50)
-    print("=" * 50)
-    print("")
     print(f"congratulations {name}, you won!")
     print(f"total score: {score}")
-    print("")
-    print("=" * 50)
-    print("+" * 50)
-    print("")
+
   def display_welcome(self, message: str):
     lines = message.split('\n')
     max_length = max(len(line) for line in lines)
@@ -86,6 +81,40 @@ class Console:
     self._display_feedback(history, game)
     print("=" * 50)
 
+  def display_choices(self, *strings):
+    print("=" * 50)
+    print("Please select an option:")
+    print("")
+    for i, option in enumerate(strings):
+      print(f"{i + 1} ({option})")
+    print("")
+
+  def display_resume_games(self, games):
+    print("=" * 50)
+    if(len(games) == 0):
+      print("")
+      print(f"You do not have any active games")
+      print("")
+      return
+    print("Please choose a game to continue:")
+    print("")
+    for i, game in enumerate(games):
+      print(f"{i + 1} (Game ID: {game['id']}, Difficulty: {game['difficulty']}, Attempts: {game['attempts']}, Hints: {game['hints']})")
+    print("")
+
+  def display_old_games(self, games):
+    print("=" * 50)
+    if(len(games) == 0):
+      print("")
+      print(f"You do not have any finished games")
+      print("")
+      return
+    print(f"Your Previous Results:")
+    print("")
+    for i, game in enumerate(games):
+      result = "Won" if game['win'] else "Lost"
+      print(f"{i + 1}. Game ID: {game['id']}, Game Answer: {game['answer']},Difficulty: {game['difficulty']}, Final Score: {game['score']}, Game Result: {result}")
+    print("")
 # ----- helper methods ------
   def _display_feedback(self, history: List[str], game: Game) -> None:
     for i in range(len(history)):

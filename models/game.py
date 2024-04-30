@@ -64,9 +64,9 @@ class Game:
 
   def give_hint(self) -> str:
     if self.hints <= 0:
-      raise Exception("you have no more hints...")
+      raise Exception("You have no more hints")
     elif len(self.history) == 0:
-      raise Exception("you must take a guess first...")
+      raise Exception("You must take a guess first")
     else:
       self.hints -= 1
       last_answer = self.history[-1]
