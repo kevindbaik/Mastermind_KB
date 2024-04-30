@@ -83,6 +83,11 @@ python main.py
 - View the top 10 players with the highest scores both locally and online! <br><br>
 <img src="readme/demo_leaderboard.gif" alt="leaderboard"> <br><br>
 
+### Rules
+- The rules of Mastermind are always accessible to read in the main menu! <br><br>
+<img src="readme/demo_rules.gif" alt="rules"> <br><br>
+
+
 ## 🏁 Features 🏁
   - WIP
 
