@@ -133,3 +133,5 @@ If you have any questions or feedback for me, I'd love hear it! Please don't hes
 - **Email**: [kevindbaik@gmail.com](mailto:your.email@example.com)
 - **LinkedIn**: [Kevin Baik](https://www.linkedin.com/in/kevin-baik-311438193/)
 - **GitHub**: [@kevindbaik](https://github.com/kevindbaik)
+
+Thank you so much for stopping by and taking the time to read about Mastermind!
