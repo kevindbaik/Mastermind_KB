@@ -102,13 +102,16 @@ python main.py
 
 
 ## 🏁 Features 🏁
-  - Play the game with no internet connection in local mode.
+  - Play the game in three different ways:
+    - Through terminal with no internet connection (local mode).
+    - Through terminal with internet connection (online mode).
+    - Through HTTP requests via Postman or any other HTTP client.
   - Difficulty option that effects game code.
   - Use two available hints in each game. 
   - Total score calculation on victory that stores into leaderboard.
   - Create an account with a name, email, and password for online mode.
     - Once logged in, session is saved and user will not have to re login. 
-  - Online game progress is always saved, even when exiting.
+  - Online game progress is always saved.
   - Jump back in to any of your online games in session and even play multiple games.
   - View results of past online games.
   - View both local and online leaderboards.
