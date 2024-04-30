@@ -108,7 +108,6 @@ class Controller:
     self.play_local_game(local_game, name, player_session)
 
   def play_local_game(self, local_game, name, player_session):
-    print(local_game.answer)
     ## game starts
     self.console.display_game(local_game)
     while not local_game.game_over:
