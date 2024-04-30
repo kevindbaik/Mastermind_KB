@@ -22,7 +22,7 @@ class OnlineManager():
       player_id = cur.lastrowid
       return {'id': player_id, 'name': name, 'email': email }, 201
     except sqlite3.IntegrityError as err:
-      return {'error': 'This username or email already exists'}, 409
+      return {'error': 'This email already exists for a player'}, 409
     except Exception as err:
       return {'error': str(err)}, 500
     finally:
@@ -40,7 +40,7 @@ class OnlineManager():
         check_password = player_dict.pop('password')
         return player_dict, check_password, 200
       else:
-        return {'error': 'User email does not exist in database'}, None, 404
+        return {'error': 'Player email does not exist in database'}, None, 404
     except sqlite3.Error as err:
       return {'error': str(err)}, 500
     finally:
