@@ -4,14 +4,14 @@ from typing import Dict, List, Tuple
 
 
 class Game:
-  def __init__(self, difficulty, answer=None, attempts=10, history=[], hints=2, win=False, game_over=False,  player_id=None, id=None, score=0):
+  def __init__(self, difficulty, answer=None, attempts=10, history=None, hints=2, win=False, game_over=False,  player_id=None, id=None, score=0):
     self.difficulty = difficulty
     if answer is None:
       self.answer = self._generate_answer()
     else:
       self.answer = answer
     self.attempts = attempts
-    self.history = history
+    self.history = history if history is not None else []
     self.hints = hints
     self.win = win
     self.game_over = game_over

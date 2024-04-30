@@ -185,14 +185,14 @@ class TestGame(unittest.TestCase):
   # validate_user_answer method
   def test_validate_user_answer(self):
     game = Game(1)
-    with self.assertRaisesRegex(ValueError, "your guess must have 4 numbers..."):
+    with self.assertRaisesRegex(ValueError, "Your guess must have 4 numbers"):
       game.validate_user_answer("11111")
-    with self.assertRaisesRegex(ValueError, "each number can only be between 0 and 7..."):
+    with self.assertRaisesRegex(ValueError, "Each number can only be between 0 and 7"):
       game.validate_user_answer("9991")
-    with self.assertRaisesRegex(ValueError, "your guess can only contain numbers..."):
+    with self.assertRaisesRegex(ValueError, "Your guess can only contain numbers"):
       game.validate_user_answer("KEVN")
     game3 = Game(3)
-    with self.assertRaisesRegex(ValueError, "your guess must have 5 numbers..."):
+    with self.assertRaisesRegex(ValueError, "Your guess must have 5 numbers"):
       game3.validate_user_answer("111211")
 
   # calculate score
@@ -218,13 +218,13 @@ class TestGame(unittest.TestCase):
 
   def test_calculate_score_easy(self):
     game = Game(1)
+    self.assertEqual(game.calculate_score(), 1600)
+    game.decrement_attempt()
+    game.decrement_attempt()
     self.assertEqual(game.calculate_score(), 1400)
-    game.decrement_attempt()
-    game.decrement_attempt()
-    self.assertEqual(game.calculate_score(), 1200)
     game.history.append("1111")
     game.give_hint()
-    self.assertEqual(game.calculate_score(), 1000)
+    self.assertEqual(game.calculate_score(), 1200)
 
   # difficulty validation
   def test_difficulty_valid(self):
@@ -242,11 +242,11 @@ class TestGame(unittest.TestCase):
 
   def test_difficulty_invalid_str(self):
     user_choice = "easy"
-    self.assertRaisesRegex(ValueError, "your choice must be a number...", lambda: Game(user_choice))
+    self.assertRaisesRegex(ValueError, "Your choice must be a number", lambda: Game(user_choice))
 
   def test_difficulty_invalid_range(self):
     user_choice = 5
-    self.assertRaisesRegex(ValueError, "your choice must be either 1, 2, or 3...", lambda: Game(user_choice))
+    self.assertRaisesRegex(ValueError, "Your choice must be either 1, 2, or 3", lambda: Game(user_choice))
 
   # api returns valid answer
   def test_api_random(self):
@@ -260,5 +260,4 @@ class TestGame(unittest.TestCase):
     self.assertEqual(len(hard_game.answer), 5)
 
 if __name__ == '__main__':
-
   unittest.main()

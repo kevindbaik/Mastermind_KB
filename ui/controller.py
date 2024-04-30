@@ -11,7 +11,6 @@ class Controller:
     self.local_manager = LocalManager()
     self.player_service = PlayerService()
     self.player = None
-    self.game = None
 
   def run(self, player_session=False):
     self.console.display_welcome("Welcome to Mastermind!")
@@ -99,7 +98,7 @@ class Controller:
     while True:
       try:
           difficulty = self.console.read_int("My Choice: ", 3)
-          local_game = Game(difficulty, history=[])
+          local_game = Game(difficulty)
           break
       except ValueError as err:
           self.console.display_error(err)
