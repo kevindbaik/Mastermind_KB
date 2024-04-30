@@ -56,11 +56,35 @@ To start the game, from the root directory of Mastermind run:
 ```bash
 python main.py
 ```
-## ⚙️ API Reference ⚙️
-**_Click [here](/readme/api-reference.md) for more information about the API routes and database schema!_**
+
+## 🎦 Demo Walkthrough 🎦
+### Local Play
+- You can play Mastermind with no internet connection through the (Play Local) option!
+- All scores played in local mode are saved in the local leaderboard. <br><br>
+<img src="readme/demo_local.gif" alt="local"> <br><br>
+
+
+### Online Play
+- If you have an internet connection and the Flask server running, you can play Mastermind Online!
+- Register an account or login using the demo user credentials (demouser@demo.com, demouser)
+  - Once you log in, you will not be asked to login again until you exit the game. <br><br>
+<img src="readme/demo_login.gif" alt="login"> <br><br>
+
+- You can start a new game or continue one of your games in progress!
+- During a game session, you may enter 'return' to return back to the menu. <br><br>
+<img src="readme/demo_resume.gif" alt="resume"> <br><br>
+- You can also view the results of your past games! <br><br>
+<img src="readme/demo_history.gif" alt="history"> <br><br>
+
+### Leaderboard
+- View the top 10 players with the highest scores both locally and online! <br><br>
+<img src="readme/demo_leaderboard.gif" alt="leaderboard"> <br><br>
 
 ## 🏁 Features 🏁
   - WIP
-    
+
+## ⚙️ API Reference ⚙️
+**_Click [here](/readme/api-reference.md) for more information about the API routes and database schema!_**
+
 ## ✏️ My Journal ✏️
 **_Click [here](/readme/journal.md) to read my journal where I documented my daily progress!_**
