@@ -75,6 +75,7 @@ class Console:
 
   def display_game(self, game: Game):
     print("=" * 50)
+    print("Return to Menu (type return)")
     print(f"Difficulty: {game.difficulty}")
     print(f"Hints Available (type hint): {game.hints}")
     print(f"Attempts Remaining: {game.attempts}")
@@ -138,7 +139,7 @@ class Console:
     print("     - remaining attempts")
     print("     - remaining hints")
     print("     - difficulty")
-    print("5) If you are playing online, you may play multiple games and may pause mid game by typing 'return'")
+    print("5) You may leave at any point during the game by typing 'return'")
     print("")
 
   def _display_feedback(self, history: List[str], game: Game) -> None:

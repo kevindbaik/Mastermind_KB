@@ -93,7 +93,6 @@ class Controller:
 
   # ------ LOCAL main helpers ---------
   def start_local_game(self, name, player_session):
-    local_game = None
     self.console.display_difficulty()
     while True:
       try:
@@ -106,6 +105,10 @@ class Controller:
         self.console.display_error(err)
         if input("Try reconnecting? (y/n): ").upper() != "Y":
           return
+    self.play_local_game(local_game, name, player_session)
+
+  def play_local_game(self, local_game, name, player_session):
+    print(local_game.answer)
     ## game starts
     self.console.display_game(local_game)
     while not local_game.game_over:
@@ -116,6 +119,7 @@ class Controller:
       while True:
         try:
           user_answer = self.console.read_string("My Guess: ")
+          self.check_return(user_answer, player_session=player_session)
           if user_answer.lower() == "hint":
             self.console.display_hint(local_game.give_hint())
           else:
