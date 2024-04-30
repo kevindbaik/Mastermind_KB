@@ -1,5 +1,5 @@
 import sqlite3
-import os
+import os.path
 
 def setup_online_db():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -15,6 +15,7 @@ def setup_online_db():
     cur.execute("DROP TABLE IF EXISTS games")
     cur.execute("DROP TABLE IF EXISTS online_leaderboard")
 
+    #
     cur.execute('''
         CREATE TABLE players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,12 +37,30 @@ def setup_online_db():
             score INTEGER,
             FOREIGN KEY (player_id) REFERENCES players (id)
         )''')
-    cur.execute('''CREATE TABLE online_leaderboard (
+    cur.execute('''
+        CREATE TABLE online_leaderboard (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
-            score integer NOT NULL,
-            difficulty integer NOT NULL
-            )''')
+            score INTEGER NOT NULL,
+            difficulty INTEGER NOT NULL
+        )''')
+
+    # seeders
+    cur.execute("INSERT INTO players (name, email, password) VALUES (?, ?, ?)",
+                ("Demo User", "demouser@demo.com", "demouser"))
+    scores = [
+        ("Frodo", 1600, 3),
+        ("Sam", 1599, 3),
+        ("Merry", 900, 2),
+        ("Pippin", 500, 2),
+        ("Harry", 1200, 2),
+        ("Hermione", 1700, 3),
+        ("Ron", 100, 1),
+        ("Luna", 600, 1),
+        ("Malfoy", 200, 1),
+        ("Voldemort", 1000, 1)
+    ]
+    cur.executemany("INSERT INTO online_leaderboard (name, score, difficulty) VALUES (?, ?, ?)", scores)
 
     con.commit()
     con.close()

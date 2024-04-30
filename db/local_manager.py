@@ -1,8 +1,13 @@
 import sqlite3
+import os.path
 
 class LocalManager():
   def __init__(self):
-    self.path = 'db/local_game.db'
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    self.path = os.path.join(BASE_DIR, "local_game.db")
+    directory = os.path.dirname(self.path)
+    if not os.path.exists(directory):
+      os.makedirs(directory)
 
   def add_score(self, name: str, score: int, difficulty: int) -> None:
     con = sqlite3.connect(self.path)
