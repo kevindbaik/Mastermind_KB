@@ -1,5 +1,5 @@
 # API Documentation
-These routes have also been created and tested with Postman. You can play the game through only HTTP requests if you'd like here! <br><br>
+These routes have also been created and tested with Postman. You may play the game solely through HTTP requests if you'd like here! <br><br>
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/28963170-0c5a8fb6-1345-4905-9fe6-43dd8381646f?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D28963170-0c5a8fb6-1345-4905-9fe6-43dd8381646f%26entityType%3Dcollection%26workspaceId%3Df984d468-f736-4b71-9bca-4529ecbea24f)
 ## Player
 ### Sign Up Player
