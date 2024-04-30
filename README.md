@@ -2,10 +2,23 @@
 <div align="center"> <img src="readme/Mastermind_KB_Logo.png" alt="logo"> </div>
 
 ## 📚 Table of Contents 📚
-  - WIP
+- [Introduction](#-introduction-)
+- [Setup and Run](#-setup-and-run-)
+- [Demo Walkthrough](#-demo-walkthrough-)
+- [Features](#-features-)
+- [Future Implementations](#-future-implementations-)
+- [API Documentation](#-api-documentation-)
+- [My Journal](#-my-journal-)
+- [Contact](#contact-)
+  
+## 🧠 Introduction 🧠
+Mastermind is a console-based puzzle game where players decipher a secret code. Play it offline for a straightforward challenge or connect online to access extra features like saving your progress. 
+<br><br>
+Whether you're looking for a quick mental workout or a fun way to pass the time... Mastermind provides a unique to test your deductive skills! 
 
-## 🖥️ Setup and Run Locally 🖥️
- Prerequisites:
+## 💻 Setup and Run 💻
+
+Prerequisites:
    - **Python 3.12**: You may download and install Python 3.12 from [python.org](https://www.python.org/downloads/release/python-3120/)
    - **Pip**: Pip is automatically installed with Python 3.12, but you can ensure it is up to date by following the instructions [here](https://pip.pypa.io/en/stable/installation/).
      
@@ -99,15 +112,21 @@ python main.py
   - Jump back in to any of your online games in session and even play multiple games.
   - View results of past online games.
   - View both local and online leaderboards.
-    
+<br><br>
 ## 🔜 Future Implementations 🔜
   - View leaderboard rankings by seperate difficulties.
   - Play local multiplayer.
   - Cancel an online game in session.
   - Game timer that tracks each game completed. 
-
-## ⚙️ API Reference ⚙️
+<br><br>
+## 🔨 API Documentation 🔨
 **_Click [here](/readme/api-reference.md) for more information about the API routes and database schema!_**
-
-## ✏️ My Journal ✏️
-**_Click [here](/readme/journal.md) to read my journal where I documented my daily progress!_**
+<br><br>
+## ✍🏻 My Journal ✍🏻
+**_Click [here](/readme/journal.md) to see my daily progress and feelings throughout the 1-week development cycle!_**
+<br><br>
+## Contact 🧑🏻
+If you have any questions or feedback for me, I'd love hear it! Please don't hesitate to reach out at:
+- **Email**: [kevindbaik@gmail.com](mailto:your.email@example.com)
+- **LinkedIn**: [Kevin Baik](https://www.linkedin.com/in/kevin-baik-311438193/)
+- **GitHub**: [@kevindbaik](https://github.com/kevindbaik)
