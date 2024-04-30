@@ -62,7 +62,10 @@ python main.py
 - You can play Mastermind with no internet connection through the (Play Local) option!
 - All scores played in local mode are saved in the local leaderboard. <br><br>
 <img src="readme/demo_local.gif" alt="local"> <br><br>
-
+- 🐣🎉 Winner! Winner! Chicken Dinner! 🎉🐣 <br><br>
+<img src="readme/demo_win.gif" alt="win"> <br><br>
+- 👍❌ Aww.. dont worry, you'll get it next time! ❌👍 <br><br>
+<img src="readme/demo_lose.gif" alt="lose"> <br><br>
 
 ### Online Play
 - If you have an internet connection and the Flask server running, you can play Mastermind Online!
@@ -73,7 +76,7 @@ python main.py
 - You can start a new game or continue one of your games in progress!
 - During a game session, you may enter 'return' to return back to the menu. <br><br>
 <img src="readme/demo_resume.gif" alt="resume"> <br><br>
-- You can also view the results of your past games! <br><br>
+- You can also view the results of your past games!  <br><br>
 <img src="readme/demo_history.gif" alt="history"> <br><br>
 
 ### Leaderboard
