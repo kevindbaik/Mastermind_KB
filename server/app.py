@@ -189,8 +189,11 @@ def get_hint(game_id):
 
 @app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():
-  leaderboard = online_manager.get_leaderboard()
-  return jsonify({'success': leaderboard}), 200
+  response, status_code = online_manager.get_leaderboard()
+  if status_code == 200:
+    return jsonify({'success': response}), 200
+  else:
+    return jsonify(response), status_code
 
 if __name__ == "__main__":
   app.run(debug=True)

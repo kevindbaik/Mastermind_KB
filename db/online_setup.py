@@ -1,5 +1,6 @@
 import sqlite3
 import os.path
+import json
 
 def setup_online_db():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,8 +47,15 @@ def setup_online_db():
         )''')
 
     # seeders
+    one_list = ['1111', '2222', '1234', '1111', '1111', '1111', '2222', '2222', '4444']
+    one_string = json.dumps(one_list)
+    two_list = ['1111']
+    two_string = json.dumps(two_list)
     cur.execute("INSERT INTO players (name, email, password) VALUES (?, ?, ?)",
                 ("Demo User", "demouser@demo.com", "demouser"))
+    cur.execute("INSERT INTO games (player_id, difficulty, answer, attempts, history, hints, win, game_over, score) VALUES (1, 3, '1234', 1, ?, 2, TRUE, TRUE, 300)", (one_string,))
+    cur.execute("INSERT INTO games (player_id, difficulty, answer, attempts, history, hints, win, game_over, score) VALUES (1, 2, '5678', 9, ?, 1, FALSE, FALSE, 0)", (two_string,))
+
     scores = [
         ("Frodo", 1600, 3),
         ("Sam", 1599, 3),
@@ -61,7 +69,6 @@ def setup_online_db():
         ("Voldemort", 1000, 1)
     ]
     cur.executemany("INSERT INTO online_leaderboard (name, score, difficulty) VALUES (?, ?, ?)", scores)
-
     con.commit()
     con.close()
 

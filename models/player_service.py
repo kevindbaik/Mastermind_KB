@@ -58,3 +58,8 @@ class PlayerService:
     url=f"http://localhost:5000/api/player/{player_id}/games/ended"
     response = self.session.get(url)
     return response.json()
+
+  def fetch_online_scores(self):
+    url="http://localhost:5000/api/leaderboard"
+    response = self.session.get(url)
+    return response.json()
