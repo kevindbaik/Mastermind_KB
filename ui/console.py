@@ -91,10 +91,29 @@ class Console:
 
   def display_resume_games(self, games):
     print("=" * 50)
+    if(len(games) == 0):
+      print("")
+      print(f"You do not have any finished games")
+      print("")
+      return
     print("Please choose a game to continue:")
     print("")
     for i, game in enumerate(games):
       print(f"{i + 1} (Game ID: {game['id']}, Difficulty: {game['difficulty']}, Attempts: {game['attempts']}, Hints: {game['hints']})")
+    print("")
+
+  def display_old_games(self, games):
+    print("=" * 50)
+    if(len(games) == 0):
+      print("")
+      print(f"You do not have any finished games")
+      print("")
+      return
+    print(f"Your Previous Results:")
+    print("")
+    for i, game in enumerate(games):
+      result = "Won" if game['win'] else "Lost"
+      print(f"{i + 1}. Game ID: {game['id']}, Game Answer: {game['answer']},Difficulty: {game['difficulty']}, Final Score: {game['score']}, Game Result: {result}")
     print("")
 # ----- helper methods ------
   def _display_feedback(self, history: List[str], game: Game) -> None:

@@ -129,7 +129,7 @@ class Controller:
     self.console.display_choices("Play New Game", "Resume Ongoing Games", "View Past Game Results")
     while True:
       try:
-        game_choice = self.console.read_int("I choose: ", 2)
+        game_choice = self.console.read_int("I choose: ", 3)
         break
       except ValueError as err:
         self.console.display_error(err)
@@ -137,7 +137,10 @@ class Controller:
       case 1:
         self.start_new_game(player_info)
       case 2:
-        self.continue_games(player_info)
+        self.continue_game(player_info)
+      case 3:
+        self.display_history(player_info)
+        pass
 
   def start_new_game(self, player_info):
     self.console.display_difficulty()
@@ -156,11 +159,15 @@ class Controller:
     else:
       self.console.display_error(response['error'])
 
-  def continue_games(self, player_info):
-    response = self.player_service.fetch_user_active_games(player_info['id'])
-    if 'success' in response: #{'success' : [ dict(game), dict(game), ...]
+  def continue_game(self, player_info):
+    response = self.player_service.fetch_user_games_active(player_info['id'])
+    if 'success' in response: #{'success' : [ dict(game), dict(game), ...]}
       data = response['success']
       self.console.display_resume_games(data)
+      if len(data) == 0:
+        input = self.console.read_string("Enter any key to return... ")
+        if input:
+          self.display_online_menu(player_info)
       while True:
         try:
           game_choice = self.console.read_int("I choose: ", len(data))
@@ -170,6 +177,17 @@ class Controller:
       game = data[game_choice - 1]
       online_game = Game(difficulty=game['difficulty'],answer=game['answer'],attempts=game['attempts'], history=game['history'], hints=game['hints'],player_id=game['player_id'],id=game['id'])
       self.play_online_game(online_game, player_info)
+    else:
+      self.console.display_error(response['error'])
+
+  def display_history(self, player_info):
+    response = self.player_service.fetch_user_games_ended(player_info['id']) #{'success' : [ dict(game), dict(game), ...]}
+    if 'success' in response:
+      data = response['success']
+      self.console.display_old_games(data)
+      input = self.console.read_string("Enter any key to return... ")
+      if input:
+        self.display_online_menu(player_info)
     else:
       self.console.display_error(response['error'])
 

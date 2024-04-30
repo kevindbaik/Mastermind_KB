@@ -49,7 +49,12 @@ class PlayerService:
     response = self.session.post(url, json=data, headers=headers)
     return response.json()
 
-  def fetch_user_active_games(self, player_id):
+  def fetch_user_games_active(self, player_id):
     url=f"http://localhost:5000/api/player/{player_id}/games/ongoing"
+    response = self.session.get(url)
+    return response.json()
+
+  def fetch_user_games_ended(self, player_id):
+    url=f"http://localhost:5000/api/player/{player_id}/games/ended"
     response = self.session.get(url)
     return response.json()

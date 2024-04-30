@@ -60,17 +60,19 @@ def login_player():
 
 @app.route('/api/player/<int:player_id>/games/ongoing', methods=['GET'])
 def get_player_games_active(player_id):
-  response = online_manager.get_player_games(player_id, game_over=False)
-  if isinstance(response, dict) and 'error' in response:
-    return jsonify(response), 500
-  return jsonify({'success': response}), 200
+  (response, status_code) = online_manager.get_player_games(player_id, game_over=False)
+  if status_code != 200:
+    return jsonify(response), status_code
+  else:
+    return jsonify({'success': response}), 200
 
 @app.route('/api/player/<int:player_id>/games/ended', methods=['GET'])
 def get_player_games_ended(player_id):
-  games = online_manager.get_player_games(player_id, game_over=True)
-  if isinstance(games, dict) and 'error' in games:
-    return jsonify(games), 500
-  return jsonify({'games': games}), 200
+  response, status_code = online_manager.get_player_games(player_id, game_over=True)
+  if status_code != 200:
+    return jsonify(response), status_code
+  else:
+    return jsonify({'success': response}), 200
 
 @app.route('/api/player/logout', methods=['GET'])
 def logout_player():

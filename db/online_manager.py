@@ -87,9 +87,9 @@ class OnlineManager():
           if game_dict['history']:
               game_dict['history'] = json.loads(game_dict['history']) #converts json string back to py list
           games_list.append(game_dict)
-      return games_list
+      return (games_list, 200)
     except sqlite3.Error as err:
-      return {'error': str(err)}
+      return ({'error': str(err)}, 500)
     finally:
       con.close()
 
