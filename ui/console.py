@@ -93,7 +93,7 @@ class Console:
     print("=" * 50)
     if(len(games) == 0):
       print("")
-      print(f"You do not have any finished games")
+      print(f"You do not have any active games")
       print("")
       return
     print("Please choose a game to continue:")
