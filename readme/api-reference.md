@@ -1,7 +1,7 @@
-## API Routes
+# API Routes
 
+## Player
 ### Sign Up Player
-
 Creates a new player, logs them in as the current player, and returns the current player's information.
 
 * Request
@@ -78,7 +78,6 @@ Creates a new player, logs them in as the current player, and returns the curren
     ```
 
 ### LOG IN Player
-
 Logs in a current player with valid credentials and returns the current player's
 information.
 
@@ -167,7 +166,6 @@ information.
 
 
 ### Log Out Player 
-
 Logs out a player
 
 * Request
@@ -206,13 +204,54 @@ Logs out a player
     ```
 
 ### Get Player Games (Active)
-
 Retrieves a list of dictionaries that each represent the players games that have not ended.
 
 * Request
   <!--!!START SILENT -->
   * Method: GET
-  * URL: http://localhost:5000/api/player/logout
+  * URL: http://localhost:5000/api/player/{player_id}/games/ongoing
+  <!--!!END -->
+  <!--!!ADD -->
+  <!-- * Method: ? -->
+  <!-- * URL: ? -->
+  <!--!!END_ADD -->
+  * Body: None
+
+* Successful Response
+  * Status Code: 200
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+      {
+        "success": [
+            {
+                "answer": "5678",
+                "attempts": 9,
+                "difficulty": 2,
+                "game_over": 0,
+                "hints": 1,
+                "history": [
+                    "1111"
+                ],
+                "id": 2,
+                "player_id": 1,
+                "score": 0,
+                "win": 0
+            }
+        ]
+    }
+    ```
+
+
+### Get Player Games (Ended)
+Retrieves a list of dictionaries that each represent the players games that have ended.
+
+* Request
+  <!--!!START SILENT -->
+  * Method: GET
+  * URL: http://localhost:5000/api/player/{player_id}/games/ended
   <!--!!END -->
   <!--!!ADD -->
   <!-- * Method: ? -->
@@ -228,39 +267,395 @@ Retrieves a list of dictionaries that each represent the players games that have
 
     ```json
     {
-      "success" : "You have been logged out"
+        "success": [
+            {
+                "answer": "1234",
+                "attempts": 1,
+                "difficulty": 3,
+                "game_over": 1,
+                "hints": 2,
+                "history": [
+                    "1111",
+                    "2222",
+                    "1234",
+                    "1111",
+                    "1111",
+                    "1111",
+                    "2222",
+                    "2222",
+                    "4444"
+                ],
+                "id": 1,
+                "player_id": 1,
+                "score": 300,
+                "win": 1
+            }
+        ]
     }
     ```
+    
+## Game
+### Start Game
+Starts a game session for the player
 
-* Error Response: No Logged In Player
-  * Status Code: 403
+* Request
+  <!--!!START SILENT -->
+  * Method: POST
+  * URL: http://localhost:5000/api/start_game
+  <!--!!END -->
+  <!--!!ADD -->
+  <!-- * Method: ? -->
+  <!-- * URL: ? -->
+  <!--!!END_ADD -->
   * Headers:
     * Content-Type: application/json
   * Body:
 
     ```json
     {
-      'error': 'No user is currently logged in'
+      "difficulty": 1
     }
     ```
 
-## SPOTS
+* Successful Response
+  * Status Code: 201
+  * Headers:
+    * Content-Type: application/json
+  * Body:
 
-### Get all Spots
+    ```json
+    {
+      "game_id": 8,
+      "message": "Game started successfully",
+      "player_id": 2
+    }
+    ```
 
-Returns all the spots.
+* Error Response: Player Not Logged In
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
 
-* Require Authentication: false
+    ```json
+    {
+      'error': 'You must be logged in to play'
+    }
+    ```
+
+### Get Status Game
+Gets current status of a game in session by player based on game id
+
 * Request
   <!--!!START SILENT -->
   * Method: GET
-  * URL: /api/spots
+  * URL: http://localhost:5000/api/game/{game_id}
   <!--!!END -->
   <!--!!ADD -->
   <!-- * Method: ? -->
   <!-- * URL: ? -->
   <!--!!END_ADD -->
-  * Body: none
+  * Headers:
+    * Content-Type: application/json
+  * Body: None
+
+* Successful Response
+  * Status Code: 201
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+       {
+        "success": {
+            "attempts_left": 9,
+            "difficulty": 2,
+            "game_id": 2,
+            "game_over": 0,
+            "hints_left": 1,
+            "history": [
+                "1111"
+            ],
+            "player_id": 1,
+            "win": 0
+        }
+    }
+    ```
+
+* Error Response: Game already ended
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game has already ended'
+    }
+    ```
+* Error Response: Game Doesn't Belong to Player
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game does not belong to user'
+    }
+    ```
+
+* Error Response: Invalid Game Id
+  * Status Code: 404
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game not found'
+    }
+    ```
+
+### Make Guess
+Player makes a guess for an active game in session
+
+* Request
+  <!--!!START SILENT -->
+  * Method: POST
+  * URL: http://localhost:5000/api/game/{game_id}/guess
+  <!--!!END -->
+  <!--!!ADD -->
+  <!-- * Method: ? -->
+  <!-- * URL: ? -->
+  <!--!!END_ADD -->
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+    {
+      "guess": "4234"
+    }
+    ```
+
+* Successful Response
+  * Status Code: 200
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+      {
+          "success": {
+              "attempts": 8,
+              "difficulty": 2,
+              "feedback": {
+                  "correct_locations": 0,
+                  "correct_numbers": 0
+              },
+              "guess": "4234",
+              "history": [
+                  "1111",
+                  "4234"
+              ]
+          }
+      }
+    ```
+
+  * Successful Response (If Game Won)
+  * Status Code: 200
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+      {
+        "game_over" : { 
+              "result": 1,
+             "score": 1500
+          }
+      }
+    ```
+
+  * Successful Response (If Game Lost)
+  * Status Code: 200
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+      {
+        "game_over" : { 
+              "result": 0,
+             "score": 0
+          }
+      }
+    ```
+    
+* Error Response: Missing Body
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Missing guess'
+    }
+    
+* Error Response: Player not logged in
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+     'error' : 'Player must be logged in'
+    }
+
+* Error Response: Game already ended
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game has already ended'
+    }
+    ```
+* Error Response: Game Doesn't Belong to Player
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game does not belong to player'
+    }
+    ```
+    
+* Error Response: Invalid Game Id
+  * Status Code: 404
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game not found'
+    }
+    ```
+
+### Get Hint
+Get a hint from current game in session
+
+* Request
+  <!--!!START SILENT -->
+  * Method: POST
+  * URL: http://localhost:5000/api/game/{game_id}/hint
+  <!--!!END -->
+  <!--!!ADD -->
+  <!-- * Method: ? -->
+  <!-- * URL: ? -->
+  <!--!!END_ADD -->
+  * Headers:
+    * Content-Type: application/json
+  * Body: None
+    
+* Successful Response
+  * Status Code: 200
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+    ```json
+      {
+          "success": {
+              "hint": "The number 2 in position 2 is not in the secret code.",
+              "hints_left": 0
+          }
+      }
+    ```
+    
+  * Error Response: No Attempt Taken
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+     'error': 'You must take a guess first'
+    }
+
+  * Error Response: No Hints Remaining
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+     'error': 'You have no more hints'
+    }
+
+  * Error Response: Game Not Found
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+     'error': 'Game not found'
+    }
+
+* Error Response: Game Already Ended
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game has already ended'
+    }
+    ```
+* Error Response: Game Does Not Belong to Player
+  * Status Code: 400
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game does not belong to player'
+    }
+    ```
+    
+* Error Response: Invalid Game Id
+  * Status Code: 404
+  * Headers:
+    * Content-Type: application/json
+  * Body:
+
+    ```json
+    {
+      'error': 'Game not found'
+    }
+    ```
+
+### Get Online Leaderboard
+Retrieves a list of dictionaries that each represent highest scores 
+
+* Request
+  <!--!!START SILENT -->
+  * Method: GET
+  * URL: http://localhost:5000/api/leaderboard
+  <!--!!END -->
+  <!--!!ADD -->
+  <!-- * Method: ? -->
+  <!-- * URL: ? -->
+  <!--!!END_ADD -->
+  * Body: None
 
 * Successful Response
   * Status Code: 200
@@ -269,29 +664,61 @@ Returns all the spots.
   * Body:
 
     ```json
-    {
-      "Spots": [
-        {
-          "id": 1,
-          "ownerId": 1,
-          "address": "123 Disney Lane",
-          "city": "San Francisco",
-          "state": "California",
-          "country": "United States of America",
-          "lat": 37.7645358,
-          "lng": -122.4730327,
-          "name": "App Academy",
-          "description": "Place where web developers are created",
-          "price": 123,
-          "createdAt": "2021-11-19 20:39:36",
-          "updatedAt": "2021-11-19 20:39:36",
-          "avgRating": 4.5,
-          "previewImage": "image url"
-        }
-      ]
+     {
+        "success": [
+            {
+                "difficulty": 3,
+                "name": "Hermione",
+                "score": 1700
+            },
+            {
+                "difficulty": 3,
+                "name": "Frodo",
+                "score": 1600
+            },
+            {
+                "difficulty": 3,
+                "name": "Sam",
+                "score": 1599
+            },
+            {
+                "difficulty": 2,
+                "name": "Harry",
+                "score": 1200
+            },
+            {
+                "difficulty": 1,
+                "name": "Voldemort",
+                "score": 1000
+            },
+            {
+                "difficulty": 2,
+                "name": "Merry",
+                "score": 900
+            },
+            {
+                "difficulty": 1,
+                "name": "Luna",
+                "score": 600
+            },
+            {
+                "difficulty": 2,
+                "name": "Pippin",
+                "score": 500
+            },
+            {
+                "difficulty": 1,
+                "name": "Malfoy",
+                "score": 200
+            },
+            {
+                "difficulty": 1,
+                "name": "Ron",
+                "score": 100
+            }
+        ]
     }
     ```
-
 
 ## Database Schema
 
